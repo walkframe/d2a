@@ -58,6 +58,21 @@ if key in DIALECTS:
     )
 
 MS_DSN = 'DRIVER={{SQL Server}}; SERVER={HOST}; DATABASE={NAME}; UID={USER}; PWD={PASSWORD};'
+URI = {
+    'postgresql': 'postgresql://{USER}:{PASSWORD}@{HOST}:{PORT}/{NAME}',
+    'postgresql+psycopg2': 'postgresql+psycopg2://{USER}:{PASSWORD}@{HOST}:{PORT}/{NAME}', 
+    'mysql': 'mysql://{USER}:{PASSWORD}@{HOST}:{PORT}/{NAME}',
+    'mysql+mysqldb': 'mysql+mysqldb://{USER}:{PASSWORD}@{HOST}:{PORT}/{NAME}',
+    'oracle': 'oracle://{USER}:{PASSWORD}@{HOST}:{PORT}/{NAME}',
+    'oracle+cx_oracle': 'oracle+cx_oracle://{USER}:{PASSWORD}@{HOST}:{PORT}/{NAME}',
+    'mssql': 'mssql://{USER}:{PASSWORD}@' + MS_DSN,
+    'mssql+pyodbc': 'mssql+pyodbc://{USER}:{PASSWORD}@' + MS_DSN,
+    'mssql+adodbapi': 'mssql+adodbapi://{USER}:{PASSWORD}@' + MS_DSN,
+    'mssql+pymssql': 'mssql+pymssql://{USER}:{PASSWORD}@' + MS_DSN,
+    'sqlite': 'sqlite:///{NAME}',
+    'sqlite3': 'sqlite:///{NAME}',
+    'sqlite+memory': 'sqlite://',
+}
 
 logger = logging.getLogger(__name__)
 
@@ -106,12 +121,15 @@ def query_expression(stmt, conn=None, dialect=None, database='default',
         'sql_reindent': True, # if setting indent the sql query or not.
         'sql_keyword_case': 'upper', # A rule converting reserved words.
         'explain_prefix': depends on the database type. unless you specify it, it is automatically used the following:
-          %(prefix)s
+          'postgresql': 'EXPLAIN ANALYZE',
+          'mysql': 'EXPLAIN',
+          'oracle': 'EXPLAIN PLAN FOR',
+          'sqlite': 'EXPLAIN QUERY PLAN',
         'printer': logger.debug, # printing method, if you use python3, then try to use `print` function.
         'delimiter': '=' * 100, # characters dividing debug informations.
         'database': 'default' # django database
       }
-    """ % {'prefix': EXPLAIN_PREFIXES}
+    """
     conn, dialect = _complement(conn, dialect, database)
     binded = stmt.compile(dialect=dialect())
     with conn.cursor() as cursor:
@@ -185,21 +203,7 @@ def execute_expression(stmt, conn=None, dialect=None, database='default'):
 
 
 def make_engine(db_type=None, database='default', encoding='utf8', echo=False):
-    uri = {
-        'postgresql': 'postgresql://{USER}:{PASSWORD}@{HOST}:{PORT}/{NAME}',
-        'postgresql+psycopg2': 'postgresql+psycopg2://{USER}:{PASSWORD}@{HOST}:{PORT}/{NAME}', 
-        'mysql': 'mysql://{USER}:{PASSWORD}@{HOST}:{PORT}/{NAME}',
-        'mysql+mysqldb': 'mysql+mysqldb://{USER}:{PASSWORD}@{HOST}:{PORT}/{NAME}',
-        'oracle': 'oracle://{USER}:{PASSWORD}@{HOST}:{PORT}/{NAME}',
-        'oracle+cx_oracle': 'oracle+cx_oracle://{USER}:{PASSWORD}@{HOST}:{PORT}/{NAME}',
-        'mssql': 'mssql://{USER}:{PASSWORD}@' + MS_DSN,
-        'mssql+pyodbc': 'mssql+pyodbc://{USER}:{PASSWORD}@' + MS_DSN,
-        'mssql+adodbapi': 'mssql+adodbapi://{USER}:{PASSWORD}@' + MS_DSN,
-        'mssql+pymssql': 'mssql+pymssql://{USER}:{PASSWORD}@' + MS_DSN,
-        'sqlite': 'sqlite:///{NAME}',
-        'sqlite3': 'sqlite:///{NAME}',
-        'sqlite+memory': 'sqlite://',
-    }[db_type or _detect_db_type(database)]
+    uri = URI[db_type or _detect_db_type(database)]
     return create_engine(
         uri.format(**settings.DATABASES[database]),
         encoding=encoding, echo=echo)
@@ -208,8 +212,7 @@ def make_engine(db_type=None, database='default', encoding='utf8', echo=False):
 @contextmanager
 def make_session(engine=None,
                  autoflush=True, autocommit=False,
-                 expire_on_commit=True, info=None
-):
+                 expire_on_commit=True, info=None):
     if not engine:
         engine = make_engine()
     Session = sessionmaker(engine,

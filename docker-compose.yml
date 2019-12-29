@@ -1,7 +1,8 @@
-version: "2"
+version: "3.7"
 
 services:
   app:
+    container_name: d2a_app
     image: python:latest
     environment:
       - LANG='en_US.UTF-8'
@@ -17,33 +18,36 @@ services:
         venv/bin/pip install pip setuptools -U &&
         venv/bin/pip install wheel &&
         venv/bin/pip install -r demo_requirements.txt &&
-        bash"
-    links:
-      - postgres:postgres
-      - mariadb:mariadb
-
+        bash
+      "
     privileged: true
 
   postgres:
+    container_name: d2a_postgres
     image: postgres:latest
     environment:
       PGDATA: /var/lib/postgresql/data/pgdata
-      POSTGRES_USER: postgres
-      # POSTGRES_DB: postgres
+      POSTGRES_USER: d2a
+      POSTGRES_PASSWORD: d2a
+      POSTGRES_DB: d2a
     volumes:
       - ./data/postgresql/:/var/lib/postgresql/
     expose:
       - "5432"
 
-  mariadb:
+  mysql:
     image: mariadb:latest
+    container_name: d2a_mysql
     environment:
       MYSQL_ROOT_PASSWORD: root
       MYSQL_DATABASE: 'd2a'
-      MYSQL_USER: 'user'
-      MYSQL_PASSWORD: 'user'
+      MYSQL_USER: 'd2a'
+      MYSQL_PASSWORD: 'd2a'
       # MYSQL_DATABASE: mysql
     volumes:
       - ./data/mysql/:/var/lib/
     expose:
       - "3306"
+
+networks:
+  d2a-network:

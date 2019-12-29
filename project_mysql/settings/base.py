@@ -10,10 +10,6 @@ For the full list of settings and their values, see
 https://docs.djangoproject.com/en/2.0/ref/settings/
 """
 
-import pymysql
-
-pymysql.install_as_MySQLdb()
-
 import os
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
@@ -85,10 +81,10 @@ WSGI_APPLICATION = 'project_mysql.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.mysql',
-        'NAME': 'mysql',
-        'USER': 'root',
-        'PASSWORD': 'root',
-        'HOST': 'mariadb',
+        'NAME': 'd2a',
+        'USER': 'd2a',
+        'PASSWORD': 'd2a',
+        'HOST': 'mysql',
         'PORT': 3306,
     },
 }
