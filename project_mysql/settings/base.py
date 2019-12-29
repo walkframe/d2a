@@ -85,7 +85,7 @@ DATABASES = {
         'USER': 'd2a',
         'PASSWORD': 'd2a',
         'HOST': os.environ.get('DB_HOST', 'mysql'),
-        'PORT': 3306,
+        'PORT': os.environ.get('MYSQL_PORT', 3306),
     },
 }
 

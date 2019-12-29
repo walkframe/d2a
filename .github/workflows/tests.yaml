@@ -46,4 +46,6 @@ jobs:
       - run: tox
         env:
           DB_HOST: localhost
+          POSTGRES_PORT = 5432
+          MYSQL_PORT = 3306
 

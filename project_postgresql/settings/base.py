@@ -86,7 +86,7 @@ DATABASES = {
         'USER': 'd2a',
         'PASSWORD': 'd2a',
         'HOST': os.environ.get('DB_HOST', 'postgres'),
-        'PORT': 5432,
+        'PORT': os.environ.get('POSTGRES_PORT', 5432),
     },
     'replica': {
         'ENGINE': 'django.db.backends.postgresql_psycopg2',
