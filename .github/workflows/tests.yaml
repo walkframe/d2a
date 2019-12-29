@@ -41,5 +41,5 @@ jobs:
           python-version: ${{ matrix.python-version }}
       - run: echo "Django==${{ matrix.django-version }}" > django.txt
       - run: echo "SQLAlchemy==${{ matrix.alchemy-version }}" > sqlalchemy.txt
-      - run: pip install tox --user
+      - run: pip install tox
       - run: tox
