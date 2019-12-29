@@ -44,3 +44,6 @@ jobs:
       - run: echo "SQLAlchemy==${{ matrix.alchemy-version }}" > sqlalchemy.txt
       - run: pip install tox
       - run: tox
+        env:
+          DB_HOST: localhost
+

@@ -85,7 +85,7 @@ DATABASES = {
         'NAME': 'd2a',
         'USER': 'd2a',
         'PASSWORD': 'd2a',
-        'HOST': 'postgres',
+        'HOST': os.environ.get('DB_HOST', 'postgres'),
         'PORT': 5432,
     },
     'replica': {
