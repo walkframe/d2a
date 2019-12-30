@@ -55,7 +55,7 @@ jobs:
                   SET character_set_server=utf8; \
                   SHOW VARIABLES like 'char%'; \
                 "
-      - run: tox
+      - run: tox -- -vv
         env:
           DB_HOST: localhost
           POSTGRES_PORT: ${{ job.services.postgres.ports[5432] }}
