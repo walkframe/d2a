@@ -44,9 +44,9 @@ jobs:
       - run: echo "SQLAlchemy==${{ matrix.alchemy-version }}" > sqlalchemy.txt
       - run: pip install tox
       - run: >
-          mysql --host localhost 
+          mysql -uroot -proot
+                --host 127.0.0.1
                 --port ${{ job.services.mysql.ports['3306'] }} 
-                -uroot -proot
                 -e "
                   SET character_set_client=utf8;
                   SET character_set_connection=utf8;
