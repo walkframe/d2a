@@ -46,7 +46,7 @@ jobs:
       - run: >
           mysql --host localhost 
                 --port ${{ job.services.mysql.ports['3306'] }} 
-                -ud2a -pd2a 
+                -uroot -proot
                 -e "
                   SET character_set_client=utf8;
                   SET character_set_connection=utf8;
