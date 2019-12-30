@@ -44,7 +44,7 @@ jobs:
       - run: echo "SQLAlchemy==${{ matrix.alchemy-version }}" > sqlalchemy.txt
       - run: pip install tox
       - run: |
-          mysql -uroot -proot \
+          mysql -ud2a -pd2a \
                 --host 127.0.0.1 \
                 --port ${{ job.services.mysql.ports['3306'] }} \
                 -e " \
