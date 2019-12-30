@@ -53,6 +53,9 @@ jobs:
                   SET character_set_database=utf8; \
                   SET character_set_results=utf8; \
                   SET character_set_server=utf8; \
+                  SHOW CREATE DATABASE; \
+                  ALTER DATABASE d2a CHARACTER SET utf8; \
+                  SHOW CREATE DATABASE; \
                   SHOW VARIABLES like 'char%'; \
                 "
       - run: tox -- -vv
