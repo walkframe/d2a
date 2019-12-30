@@ -24,7 +24,7 @@ jobs:
           MYSQL_PASSWORD: d2a
         ports:
           - 3306/tcp
-        options: --health-cmd "mysqladmin ping -h localhost" --health-interval 20s --health-timeout 10s --health-retries 10  --character-set-server=utf8 --collation-server=utf8_unicode_ci
+        options: --health-cmd "mysqladmin ping -h localhost" --health-interval 20s --health-timeout 10s --health-retries 10
 
     strategy:
       max-parallel: 4
@@ -43,6 +43,19 @@ jobs:
       - run: echo "Django==${{ matrix.django-version }}" > django.txt
       - run: echo "SQLAlchemy==${{ matrix.alchemy-version }}" > sqlalchemy.txt
       - run: pip install tox
+      - run: >
+          mysql --host localhost 
+                --port ${{ job.services.mysql.ports['3306'] }} 
+                -ud2a -pd2a 
+                -e "
+                  SET character_set_client=utf8;
+                  SET character_set_connection=utf8;
+                  SET character_set_database=utf8;
+                  SET character_set_results=utf8;
+                  SET character_set_server=utf8;
+                  SET character_set_system=utf8;
+                  SHOW VARIABLES like 'char%';
+                "
       - run: tox
         env:
           DB_HOST: localhost
