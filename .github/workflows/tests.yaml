@@ -43,7 +43,7 @@ jobs:
       - run: echo "Django==${{ matrix.django-version }}" > django.txt
       - run: echo "SQLAlchemy==${{ matrix.alchemy-version }}" > sqlalchemy.txt
       - run: pip install tox
-      - run: >
+      - run: |
           mysql -uroot -proot
                 --host 127.0.0.1
                 --port ${{ job.services.mysql.ports['3306'] }} 
