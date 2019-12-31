@@ -2,21 +2,14 @@
 import re
 import logging
 import warnings
-from collections import OrderedDict
 from contextlib import contextmanager
 
 from sqlalchemy.orm import sessionmaker
-from sqlalchemy import dialects, create_engine
+from sqlalchemy import create_engine
 from django.conf import settings
 from django.db import transaction
 
 from .compat import basestring
-
-DIALECTS = {
-    t: getattr(dialects, t).dialect
-    for t in ['postgresql', 'mysql', 'oracle', 'mssql', 'sqlite', 'firebase']
-    if hasattr(dialects, t)
-}
 
 EXPLAIN_PREFIXES = {
     'postgresql': 'EXPLAIN ANALYZE',
@@ -25,38 +18,6 @@ EXPLAIN_PREFIXES = {
     'sqlite': 'EXPLAIN QUERY PLAN',
 }
 
-DIALECT_MAPPING = {}
-key = 'postgresql'
-if key in DIALECTS:
-    # https://github.com/sqlalchemy/sqlalchemy/blob/f572cdf7850b7a2ee6b7535b8129a76fa73496e6/test/sql/test_compiler.py#L2562
-    DIALECT_MAPPING[DIALECTS[key]] = lambda sql, params: (
-        sql,
-        params,
-    )
-
-key = 'mysql'
-if key in DIALECTS:
-    # https://github.com/sqlalchemy/sqlalchemy/blob/f572cdf7850b7a2ee6b7535b8129a76fa73496e6/test/sql/test_compiler.py#L2583
-    DIALECT_MAPPING[DIALECTS[key]] = lambda sql, params: (
-        sql,
-        tuple(params.values()),
-    )
-
-key = 'oracle'
-if key in DIALECTS:
-    # https://github.com/sqlalchemy/sqlalchemy/blob/f572cdf7850b7a2ee6b7535b8129a76fa73496e6/test/sql/test_compiler.py#L2569
-    DIALECT_MAPPING[DIALECTS[key]] = lambda sql, params: (
-        re.sub(r"(?<!:):([A-Za-z][0-9A-Za-z_]+)", r"%(\1)s", sql),
-        params,
-    )
-
-key = 'sqlite'
-if key in DIALECTS:
-    # https://github.com/sqlalchemy/sqlalchemy/blob/f572cdf7850b7a2ee6b7535b8129a76fa73496e6/test/sql/test_compiler.py#L2599
-    DIALECT_MAPPING[DIALECTS[key]] = lambda sql, params: (
-        sql.replace('?', '%s'),
-        tuple(params.values()),
-    )
 
 MS_DSN = 'DRIVER={{SQL Server}}; SERVER={HOST}; DATABASE={NAME}; UID={USER}; PWD={PASSWORD};'
 URI = {
@@ -88,26 +49,8 @@ def _detect_db_type(database='default'):
     }.get(settings.DATABASES[database]['ENGINE'])
 
 
-def _execute_cursor(cursor, sql, params):
-    try:
-        cursor.execute(sql, params)
-    except Exception:
-        logger.exception('param:%s\nsql:%s', params, sql)
-
-
-def _complement(conn, dialect, database='default'):
-    if not conn:
-        conn = transaction.get_connection()
-    if not dialect:
-        dialect = _detect_db_type(database)
-    if isinstance(dialect, basestring):
-        dialect = DIALECTS[dialect]
-
-    return conn, dialect
-
-
-def query_expression(stmt, conn=None, database='default',
-                     as_col_dict=True, as_row_list=True, dict_method=OrderedDict, debug={}):
+def query_expression(stmt, engine=None, database='default',
+                     as_col_dict=True, as_row_list=True, dict_method=dict, debug={}):
     """
     :stmt: sqlalchemy expression object
     :as_col_dict: 
@@ -131,12 +74,13 @@ def query_expression(stmt, conn=None, database='default',
         'database': 'default' # django database
       }
     """
-    engine = make_engine()
-    with conn or engine.connect() as conn:
+    engine = engine or make_engine(database=database)
+    with engine.connect() as conn:
         result = conn.execute(stmt)
         if debug:
-            debug_expression(conn, debug)
-        
+            with conn.connection.cursor() as cursor:
+                show_debug(cursor, {**debug, 'database': database})
+
     if not as_col_dict:
         rows = list(result) if as_row_list else result
     else:
@@ -148,21 +92,17 @@ def query_expression(stmt, conn=None, database='default',
     return rows
 
 
-def execute_expression(stmt, conn=None, database='default', debug={}):
-    engine = make_engine()
-    with conn or engine.connect() as conn:
+def execute_expression(stmt, engine=None, database='default', debug={}):
+    engine = engine or make_engine(database=database)
+    with engine.connect() as conn:
         result = conn.execute(stmt)
         if debug:
-            debug_expression(conn, debug)
+            with conn.connection.cursor() as cursor:
+                show_debug(cursor, {**debug, 'database': database})
     return result.rowcount
 
 
-def debug_expression(conn, stmt, options={}):
-    with conn.cursor() as cursor:
-        show_debug_info(cursor, options)
-
-
-def show_debug_info(cursor, options={}):
+def show_debug(cursor, options={}):
     printer = options.get('printer', print)
     delimiter = options.get('delimiter', '=' * 100 + '\n')
     database = _detect_db_type(options.get('database', 'default'))
@@ -192,7 +132,6 @@ def get_sql(cursor, printer, delimiter, database, format, reindent, keyword_case
             sql = sqlparse.format(sql, reindent=reindent, keyword_case=keyword_case)
         except ImportError:
             warnings.warn('Formatting sql requires "sqlparse". Install as follows: "pip install sqlparse".')
-            
     return sql
 
 
@@ -240,3 +179,4 @@ def make_session(engine=None,
 
 
 AUTO_DETECTED_DB_TYPE = _detect_db_type()
+
