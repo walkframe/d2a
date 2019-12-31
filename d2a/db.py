@@ -1,6 +1,7 @@
 # coding: utf-8
 import re
 import logging
+import warnings
 from collections import OrderedDict
 from contextlib import contextmanager
 
@@ -105,7 +106,7 @@ def _complement(conn, dialect, database='default'):
     return conn, dialect
 
 
-def query_expression(stmt, conn=None, dialect=None, database='default',
+def query_expression(stmt, conn=None, database='default',
                      as_col_dict=True, as_row_list=True, dict_method=OrderedDict, debug={}):
     """
     :stmt: sqlalchemy expression object
@@ -130,42 +131,55 @@ def query_expression(stmt, conn=None, dialect=None, database='default',
         'database': 'default' # django database
       }
     """
-    conn, dialect = _complement(conn, dialect, database)
-    binded = stmt.compile(dialect=dialect())
-    with conn.cursor() as cursor:
-        sql, params = DIALECT_MAPPING[dialect](str(binded), binded.params)
-        _execute_cursor(cursor, sql, params)
-        if not as_col_dict:
-            result = list(cursor) if as_row_list else cursor
-        else:
-            dicts = (
-                dict_method(zip([c.name for c in stmt.c], row))
-                for row in cursor
-            )
-            result = list(dicts) if as_row_list else dicts
-
+    engine = make_engine()
+    with conn or engine.connect() as conn:
+        result = conn.execute(stmt)
         if debug:
-            show_debug_info(cursor, sql, params, debug)
-        return result
+            debug_expression(conn, debug)
+        
+    if not as_col_dict:
+        rows = list(result) if as_row_list else result
+    else:
+        dicts = (
+            dict_method(zip([c.name for c in stmt.c], row))
+            for row in result
+        )
+        rows = list(dicts) if as_row_list else dicts
+    return rows
 
 
-def show_debug_info(cursor, sql, params, options={}):
-    printer = options.get('printer', logger.debug)
+def execute_expression(stmt, conn=None, database='default', debug={}):
+    engine = make_engine()
+    with conn or engine.connect() as conn:
+        result = conn.execute(stmt)
+        if debug:
+            debug_expression(conn, debug)
+    return result.rowcount
+
+
+def debug_expression(conn, stmt, options={}):
+    with conn.cursor() as cursor:
+        show_debug_info(cursor, options)
+
+
+def show_debug_info(cursor, options={}):
+    printer = options.get('printer', print)
     delimiter = options.get('delimiter', '=' * 100 + '\n')
     database = _detect_db_type(options.get('database', 'default'))
+    sql = get_sql(cursor, printer, delimiter, database,
+                  options.get('sql_format', False),
+                  options.get('sql_reindent', True),
+                  options.get('sql_keyword_case', 'upper'))
+
     if options.get('show_sql', True):
-        show_sql(cursor, printer, delimiter, database,
-                 options.get('sql_format', False),
-                 options.get('sql_reindent', True),
-                 options.get('sql_keyword_case', 'upper'),
-                 )
+        printer(sql)
 
     if options.get('show_explain', False):
-        show_explain(cursor, printer, delimiter, database, sql, params,
+        show_explain(cursor, sql, printer, delimiter, database,
                      options.get('explain_prefix', EXPLAIN_PREFIXES[database]))
 
 
-def show_sql(cursor, printer, delimiter, database, format, reindent, keyword_case):
+def get_sql(cursor, printer, delimiter, database, format, reindent, keyword_case):
     sql = {
         'postgresql': lambda: cursor.db.queries_log[-1]['sql'],
         'mysql': lambda: cursor.db.queries_log[-1]['sql'],
@@ -177,29 +191,21 @@ def show_sql(cursor, printer, delimiter, database, format, reindent, keyword_cas
             import sqlparse
             sql = sqlparse.format(sql, reindent=reindent, keyword_case=keyword_case)
         except ImportError:
-            warnings.warn('Formatting sql requires "sqlparse". Do like this: "pip install sqlparse".')
-    printer(delimiter + sql)
+            warnings.warn('Formatting sql requires "sqlparse". Install as follows: "pip install sqlparse".')
+            
+    return sql
 
 
 def show_explain(cursor, printer, delimiter, database, sql, params, explain_prefix):
     explain_sql = explain_prefix + ' ' + sql
-    _execute_cursor(cursor, explain_sql, params)
-    sql = {
+    cursor.execute(explain_sql)
+    result = {
         'postgresql': lambda: '\n'.join(row[0] for row in cursor),
         'mysql': lambda: '\n'.join(' | '.join(map(str, row)) for row in cursor),
         'oracle': lambda: '\n'.join(' | '.join(map(str, row)) for row in cursor),
         'sqlite3': lambda: '\n'.join(' | '.join(map(str, row)) for row in cursor),
     }[database]()
-    printer(delimiter + sql)
-
-
-def execute_expression(stmt, conn=None, dialect=None, database='default'):
-    conn, dialect = _complement(conn, dialect, database)
-    binded = stmt.compile(dialect=dialect())
-    with conn.cursor() as cursor:
-        sql, params = DIALECT_MAPPING[dialect](str(binded), binded.params)
-        _execute_cursor(cursor, sql, params)
-        return cursor.rowcount
+    printer(delimiter + result)
 
 
 def make_engine(db_type=None, database='default', encoding='utf8', echo=False):
