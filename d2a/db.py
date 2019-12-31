@@ -147,11 +147,12 @@ def show_explain(cursor, printer, delimiter, database, sql, params, explain_pref
     printer(delimiter + result)
 
 
-def make_engine(db_type=None, database='default', encoding='utf8', echo=False):
+def make_engine(db_type=None, database='default', encoding='utf8', echo=False, creator=None):
     uri = URI[db_type or _detect_db_type(database)]
+    ext = {'creator': creator} if creator else {}
     return create_engine(
         uri.format(**settings.DATABASES[database]),
-        encoding=encoding, echo=echo)
+        encoding=encoding, echo=echo, **ext)
 
 
 @contextmanager
