@@ -198,7 +198,7 @@ you can register the field as the other field using `alias` or `alias_dict` meth
 
 .. note::
 
-  Before d2a 2.1.x maps ``django.contrib.postgres.fields.JSONField`` to ``JSON`` uncorrectly. It should have mapped it to ``JSONB``.
+  Before 2.1.x d2a maps ``django.contrib.postgres.fields.JSONField`` to ``JSON`` uncorrectly. It should have mapped it to ``JSONB``.
 
   Since 2.2.0 the mapping is fixed.
 
@@ -210,6 +210,8 @@ you can register the field as the other field using `alias` or `alias_dict` meth
     import d2a
 
     d2a.alias(JSONField, d2a.JSONType)
+
+  Or add to ``settings.D2A_CONFIG['ALIASES']``.
 
 
 Querying shortcut
@@ -411,7 +413,7 @@ History
     - SQLAlchemy: `< 1.1.0`.
 
   - ``d2a.make_engine`` can receive all ``create_engine`` arguments now.
-  - Remapped django JSONField to JSONB (Before JSON)
+  - Remapped django JSONField to JSONB (it was ``JSON`` before)
   - Migrated to GitHub Actions from CircleCI.
 
 

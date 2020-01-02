@@ -1,5 +1,0 @@
-SELECT author.id, author.name 
-FROM author ORDER BY author.ageSELECT author.id, author.name 
-FROM author ORDER BY author.ageSELECT author.id, author.name 
-FROM author ORDER BY author.ageSELECT author.id, author.name 
-FROM author ORDER BY author.age
