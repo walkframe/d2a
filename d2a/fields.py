@@ -16,17 +16,17 @@ Mapping definition
 :postgresql:
 
   - https://github.com/django/django/blob/master/django/db/backends/postgresql/base.py
-  - https://github.com/zzzeek/sqlalchemy/blob/master/lib/sqlalchemy/dialects/postgresql/__init__.py
+  - https://github.com/sqlalchemy/sqlalchemy/blob/master/lib/sqlalchemy/dialects/postgresql/__init__.py
 
 :mysql:
 
   - https://github.com/django/django/blob/master/django/db/backends/mysql/base.py
-  - https://github.com/zzzeek/sqlalchemy/blob/master/lib/sqlalchemy/dialects/mysql/__init__.py
+  - https://github.com/sqlalchemy/sqlalchemy/blob/master/lib/sqlalchemy/dialects/mysql/__init__.py
 
 :oracle:
 
   - https://github.com/django/django/blob/master/django/db/backends/oracle/base.py
-  - https://github.com/zzzeek/sqlalchemy/blob/master/lib/sqlalchemy/dialects/oracle/__init__.py
+  - https://github.com/sqlalchemy/sqlalchemy/blob/master/lib/sqlalchemy/dialects/oracle/__init__.py
 
 """
 
@@ -48,7 +48,7 @@ mapping = {
         '_oracle_type_option': {'precision': 11},
     },
     models.PositiveIntegerField: {
-        '_default_type': default_types.INTEGER, 
+        '_default_type': default_types.INTEGER,
         '_postgresql_type': postgresql_types.INTEGER,
         '_mysql_type': mysql_types.INTEGER,
         '_oracle_type': oracle_types.NUMBER,
@@ -56,22 +56,22 @@ mapping = {
         '_oracle_type_option': {'precision': 11},
     },
     models.SmallIntegerField: {
-        '_default_type': default_types.SMALLINT, 
+        '_default_type': default_types.SMALLINT,
         '_postgresql_type': postgresql_types.SMALLINT,
         '_mysql_type': mysql_types.SMALLINT,
         '_oracle_type': oracle_types.NUMBER,
         '_oracle_type_option': {'precision': 11},
     },
     models.PositiveSmallIntegerField: {
-        '_default_type': default_types.SMALLINT, 
-        '_postgresql_type': postgresql_types.SMALLINT, 
+        '_default_type': default_types.SMALLINT,
+        '_postgresql_type': postgresql_types.SMALLINT,
         '_mysql_type': mysql_types.SMALLINT,
-        '_oracle_type': oracle_types.NUMBER, 
+        '_oracle_type': oracle_types.NUMBER,
         '_mysql_type_option': {'unsigned': True},
         '_oracle_type_option': {'precision': 11},
     },
     models.BigIntegerField: {
-        '_default_type': default_types.BIGINT, 
+        '_default_type': default_types.BIGINT,
         '_postgresql_type': postgresql_types.BIGINT,
         '_mysql_type': mysql_types.BIGINT,
         '_oracle_type': oracle_types.NUMBER,
@@ -276,11 +276,11 @@ mapping = {
         '_callback': lambda f: {
             '_callback': lambda f: (mapping[type(f.target_field)], f.target_field),
             '_rel_option': {
-                '_logical_name': f.name, 
-                '_back': f.related_query_name(), 
+                '_logical_name': f.name,
+                '_back': f.related_query_name(),
                 '_target': f.related_model()._meta.db_table,
                 'uselist': False,
-            }, 
+            },
             '_fk_option': {
                 'column': '{meta.db_table}.{meta.pk.attname}'.format(meta=f.related_model._meta),
                 'ondelete': f.remote_field.on_delete.__name__,
@@ -290,7 +290,7 @@ mapping = {
     M2MField: {
         '_callback': lambda f: {
             '_rel_option': {
-                '_secondary_model': f.rel.through, 
+                '_secondary_model': f.rel.through,
                 '_target_field': f.field.m2m_target_field_name(),
                 '_remote_primary_field': f.field.m2m_column_name(),
                 '_remote_secondary_field': f.field.m2m_reverse_name(),
@@ -318,14 +318,40 @@ try:
 except AttributeError:
     pass
 
+
+try:
+    mapping[models.PositiveBigIntegerField] = {
+        '_default_type': default_types.BIGINT,
+        '_postgresql_type': postgresql_types.BIGINT,
+        '_mysql_type': mysql_types.BIGINT,
+        '_oracle_type': oracle_types.NUMBER,
+        '_mysql_type_option': {'unsigned': True},
+        '_oracle_type_option': {'precision': 19},
+    }
+except AttributeError:
+    pass
+
 try:
     # 1.10 or later supports
     mapping[models.BigAutoField] = {
-        '_default_type': default_types.BIGINT, 
+        '_default_type': default_types.BIGINT,
         '_postgresql_type': postgresql_types.BIGINT,
         '_mysql_type': mysql_types.BIGINT,
         '_oracle_type': oracle_types.NUMBER,
         '_oracle_type_option': {'precision': 19},
+        'autoincrement': True,
+    }
+except AttributeError:
+    pass
+
+try:
+    # 3.0 or later supports
+    mapping[models.SmallAutoField] = {
+        '_default_type': default_types.SMALLINT,
+        '_postgresql_type': postgresql_types.SMALLINT,
+        '_mysql_type': mysql_types.SMALLINT,
+        '_oracle_type': oracle_types.NUMBER,
+        '_oracle_type_option': {'precision': 5},
         'autoincrement': True,
     }
 except AttributeError:
@@ -345,15 +371,22 @@ try:
 except AttributeError:
     pass
 
+
+JSONType = {
+    '_default_type': default_types.JSON,
+    '_postgresql_type': postgresql_types.JSON,
+    '_mysql_type': mysql_types.JSON,
+    '_oracle_type': default_types.JSON,
+}
+
 try:
     mapping[postgres_fields.JSONField] = {
-        '_default_type': default_types.JSON,
-        '_postgresql_type': postgresql_types.JSON,
-        '_mysql_type': mysql_types.JSON,
-        '_oracle_type': default_types.JSON,
+        **JSONType,
+        '_postgresql_type': postgresql_types.JSONB,
     }
 except AttributeError:
     pass
+
 
 def alias(new_field, existing_field):
     """It defines a new converting rule same with existing one.

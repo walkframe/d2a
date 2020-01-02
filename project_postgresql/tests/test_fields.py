@@ -123,7 +123,7 @@ class TestPostgreSQL(object):
             'price': {
                 'primary_key': False,
                 'unique': False,
-                'type': sa.dialects.postgresql.JSON,
+                'type': sa.dialects.postgresql.JSONB,
                 'nullable': False,
             },
             'title': {

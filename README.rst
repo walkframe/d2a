@@ -1,22 +1,24 @@
 .. image:: https://badge.fury.io/py/d2a.svg
   :target: https://badge.fury.io/py/d2a
 
-.. image:: https://circleci.com/gh/walkframe/d2a.svg?style=svg
-  :target: https://circleci.com/gh/walkframe/d2a
+.. image:: https://github.com/walkframe/d2a/workflows/master/badge.svg)]
+  :targe: https://github.com/walkframe/d2a/actions
+
+
 
 Requirements
 ============
-- Python: 2.7.15 or later, 3.4 or later.
+- Python: 3.5 or later.
 
-  - Tested with 2.7.15, 3.6
+  - Tested with 3.5.7, 3.8.0
 
-- Django: 1.9 or later.
+- Django: 1.11, 2.x, 3.x
   
-  - Tested with 1.11, 2.0, 2.1
+  - Tested with 1.11.27, 2.2.9, 3.0.1
 
-- SQLAlchemy: 0.9 or later.
+- SQLAlchemy: 1.1 or later.
 
-  - Tested with 1.2
+  - Tested with 1.1.0, 1.3.12
 
 Installation
 ============
@@ -172,6 +174,7 @@ If you just want to convert one model, you should use `declare` function.
   sales.book         sales.id           sales.mro(         sales.sold
   sales.book_id      sales.metadata     sales.reservation  sales.source
 
+
 Custom fields
 -------------
 If you are using customized field (not built-in),
@@ -189,8 +192,25 @@ you can register the field as the other field using `alias` or `alias_dict` meth
 
   # or
   alias_dict({
-    ExtendedImageField: ImageField,
+      ExtendedImageField: ImageField,
   })
+
+
+.. note::
+
+  Before d2a 2.1.x maps ``django.contrib.postgres.fields.JSONField`` to ``JSON`` uncorrectly. It should have mapped it to ``JSONB``.
+
+  Since 2.2.0 the mapping is fixed.
+
+  If you want to use ``JSON` type as before, then you are able to map some jsonfield to ``JSON` as follows:
+  
+  .. code-block:: python3
+  
+    from jsonfield import JSONField  # e.g. https://github.com/dmkoch/django-jsonfield
+    import d2a
+
+    d2a.alias(JSONField, d2a.JSONType)
+
 
 Querying shortcut
 ------------------
@@ -272,6 +292,7 @@ There are two functions.
   ...     AuthorTable.c.name,
   ...     AuthorTable.c.age,
   ... ]).select_from(AuthorTable).order_by(AuthorTable.c.age)
+
   >>> query_expression(stmt)
   [
     OrderedDict([('id', 12), ('name', 'a'), ('age', 10)]),
@@ -346,7 +367,7 @@ preparation
 
 .. code-block:: shell 
 
-  $ docker exec -it d2a_app_1 /bin/bash
+  $ docker exec -it d2a_app /bin/bash
   # python -m venv venv # only first time
   # source venv/bin/activate
   (venv) # cd project_postgresql/ # (or mysql)
@@ -367,7 +388,7 @@ execute
   >>> book.author = author
   >>> author.books
   [<d2a.book object at 0x7f3cec539358>]
-  # And do something you want do ;)
+  # And do something you want to do ;)
 
 
 Links
@@ -377,6 +398,22 @@ Links
 
 History
 =======
+:2.2.x:
+
+  - Supported the following fields:
+
+    - `PositiveBigInteger`
+    - `SmallAutoField`
+
+  - Dropped support for the following versions:
+
+    - Python: `< 3.5.0`.
+    - SQLAlchemy: `< 1.1.0`.
+
+  - ``d2a.make_engine`` can receive all ``create_engine`` arguments now.
+  - Remapped django JSONField to JSONB (Before JSON)
+  - Migrated to GitHub Actions from CircleCI.
+
 
 :2.1.0:
 

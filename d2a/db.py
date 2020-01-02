@@ -26,6 +26,7 @@ EXPLAIN_PREFIXES = {
 }
 
 DIALECT_MAPPING = {}
+
 key = 'postgresql'
 if key in DIALECTS:
     # https://github.com/sqlalchemy/sqlalchemy/blob/f572cdf7850b7a2ee6b7535b8129a76fa73496e6/test/sql/test_compiler.py#L2562
@@ -39,7 +40,7 @@ if key in DIALECTS:
     # https://github.com/sqlalchemy/sqlalchemy/blob/f572cdf7850b7a2ee6b7535b8129a76fa73496e6/test/sql/test_compiler.py#L2583
     DIALECT_MAPPING[DIALECTS[key]] = lambda sql, binded: (
         sql,
-        tuple([binded.params[k] for k in binded.positiontup]),
+        tuple(binded.params[k] for k in binded.positiontup),
     )
 
 key = 'oracle'
@@ -184,7 +185,7 @@ def show_sql(cursor, printer, delimiter, database, format, reindent, keyword_cas
             import sqlparse
             sql = sqlparse.format(sql, reindent=reindent, keyword_case=keyword_case)
         except ImportError:
-            warnings.warn('Formatting sql requires "sqlparse". Do like this: "pip install sqlparse".')
+            warnings.warn('Formatting sql requires "sqlparse". Do as follows: "pip install sqlparse".')
     printer(delimiter + sql)
 
 

@@ -12,7 +12,7 @@ from sqlalchemy.orm import relationship
 
 from .parsers import parse_models, parse_model
 from .utils import get_camelcase
-from .fields import alias, alias_dict
+from .fields import alias, alias_dict, JSONType
 from .db import (
     AUTO_DETECTED_DB_TYPE,
     query_expression, execute_expression,
