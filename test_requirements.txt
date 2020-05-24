@@ -1,5 +1,6 @@
 mysqlclient==1.4.6
 psycopg2==2.8.4
+Shapely==1.7.0
 
 pytest==5.3.2
 pytest-django==3.7.0

@@ -3,7 +3,8 @@ version: "3.7"
 services:
   app:
     container_name: d2a_app
-    image: python:latest
+    build:
+      context: .
     environment:
       - LANG='en_US.UTF-8'
       - PYTHONDONTWRITEBYTECODE=1
@@ -21,10 +22,13 @@ services:
         bash
       "
     privileged: true
+    ports:
+    - "1310:1310"
+    
 
   postgres:
     container_name: d2a_postgres
-    image: postgres:latest
+    image: postgis/postgis:latest
     environment:
       PGDATA: /var/lib/postgresql/data/pgdata
       POSTGRES_USER: d2a

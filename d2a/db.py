@@ -62,7 +62,7 @@ if key in DIALECTS:
 MS_DSN = 'DRIVER={{SQL Server}}; SERVER={HOST}; DATABASE={NAME}; UID={USER}; PWD={PASSWORD};'
 URI = {
     'postgresql': 'postgresql://{USER}:{PASSWORD}@{HOST}:{PORT}/{NAME}',
-    'postgresql+psycopg2': 'postgresql+psycopg2://{USER}:{PASSWORD}@{HOST}:{PORT}/{NAME}', 
+    'postgresql+psycopg2': 'postgresql+psycopg2://{USER}:{PASSWORD}@{HOST}:{PORT}/{NAME}',
     'mysql': 'mysql://{USER}:{PASSWORD}@{HOST}:{PORT}/{NAME}',
     'mysql+mysqldb': 'mysql+mysqldb://{USER}:{PASSWORD}@{HOST}:{PORT}/{NAME}',
     'oracle': 'oracle://{USER}:{PASSWORD}@{HOST}:{PORT}/{NAME}',
@@ -83,6 +83,7 @@ def _detect_db_type(database='default'):
     return {
         'django.db.backends.postgresql': 'postgresql',
         'django.db.backends.postgresql_psycopg2': 'postgresql',
+        'django.contrib.gis.db.backends.postgis': 'postgresql',
         'django.db.backends.mysql': 'mysql',
         'django.db.backends.oracle': 'oracle',
         'django.db.backends.sqlite3': 'sqlite3',

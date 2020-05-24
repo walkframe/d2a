@@ -2,6 +2,7 @@
 .pypirc
 .tox/*
 .cache/*
+.local
 *.egg-info/*
 
 build/*

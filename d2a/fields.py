@@ -1,6 +1,10 @@
 # coding: utf-8
+import warnings
+
 from django.db import models
+from django.conf import settings
 from django.contrib.postgres import fields as postgres_fields
+
 from sqlalchemy import types as default_types
 from sqlalchemy.dialects import (
     postgresql as postgresql_types,
@@ -18,6 +22,9 @@ Mapping definition
   - https://github.com/django/django/blob/master/django/db/backends/postgresql/base.py
   - https://github.com/sqlalchemy/sqlalchemy/blob/master/lib/sqlalchemy/dialects/postgresql/__init__.py
 
+  - https://github.com/django/django/blob/master/django/contrib/gis/db/models/fields.py
+  - https://github.com/geoalchemy/geoalchemy2/blob/master/geoalchemy2/types.py
+
 :mysql:
 
   - https://github.com/django/django/blob/master/django/db/backends/mysql/base.py
@@ -30,6 +37,7 @@ Mapping definition
 
 """
 
+D2A_CONFIG = getattr(settings, 'D2A_CONFIG', {})
 
 mapping = {
     models.AutoField: {
@@ -389,6 +397,14 @@ try:
     }
 except AttributeError:
     pass
+
+try:
+    from .geoalchemy2 import geo_mapping
+    mapping.update(geo_mapping)
+
+except (ImportError, AttributeError) as e:
+    if D2A_CONFIG.get('USE_GEOALCHEMY2', False):
+        warnings.warn('An error occured: {}. HINT: GeoAlchemy2 should be installed when you use GeoDjango.'.format(e))
 
 
 def alias(new_field, existing_field):

@@ -392,6 +392,7 @@ execute
   [<d2a.book object at 0x7f3cec539358>]
   # And do something you want to do ;)
 
+`GeoDjango-GeoAlchemy2 translation demo <https://github.com/walkframe/d2a/blob/master/demo_geoalchemy2.rst>`__
 
 Links
 =====
@@ -400,6 +401,17 @@ Links
 
 History
 =======
+:2.3.x:
+  
+  :2020-05-25:
+
+    - GeoAlchemy2 support.
+
+      - It translates 
+        `GeoDjango fields <https://docs.djangoproject.com/en/3.0/ref/contrib/gis/model-api/>`__
+        into 
+        `GeoAlchemy2 fields <https://geoalchemy-2.readthedocs.io/en/0.2.6/types.html>`__.
+
 :2.2.x:
 
   - :2020-01-03: Release
