@@ -3,10 +3,11 @@ d2a has been supported `GeoDjango <https://docs.djangoproject.com/en/3.0/ref/con
 It translates
 `GeoDjango fields <https://docs.djangoproject.com/en/3.0/ref/contrib/gis/model-api/>`__
 into 
-`GeoAlchemy2 fields<https://geoalchemy-2.readthedocs.io/en/0.2.6/types.html>`__ (it seems the latest doc is dead)
+`GeoAlchemy2 fields <https://geoalchemy-2.readthedocs.io/en/0.2.6/types.html>`__ (it seems the latest doc is dead)
 .
 
 requirements:
+
 - `GetAlchemy2 <https://geoalchemy-2.readthedocs.io/en/latest/>`__ (tested with 0.8.2)
 
 You can try the demo on `project_postgis`. (`project_postgis/places/models.py <project_postgis/places/models.py>`__)
