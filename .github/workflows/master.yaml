@@ -12,7 +12,7 @@ jobs:
     runs-on: ubuntu-latest
     services:
       postgres:
-        image: postgres:12
+        image: postgis/postgis:12-master
         env:
           POSTGRES_USER: d2a
           POSTGRES_PASSWORD: d2a
@@ -66,7 +66,7 @@ jobs:
                 "
       - run: tox -- -vv
         env:
-          DB_HOST: localhost
+          DB_HOST: 127.0.0.1
           POSTGRES_PORT: ${{ job.services.postgres.ports[5432] }}
           MYSQL_PORT: ${{ job.services.mysql.ports[3306] }}
           MYSQL_USER: root
