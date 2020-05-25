@@ -25,6 +25,7 @@ jobs:
           MYSQL_DATABASE: d2a
           MYSQL_USER: d2a
           MYSQL_PASSWORD: d2a
+          MYSQL_ALLOW_EMPTY_PASSWORD: yes
         ports:
           - 3306/tcp
         options: --health-cmd "mysqladmin ping -h localhost" --health-interval 20s --health-timeout 10s --health-retries 10
