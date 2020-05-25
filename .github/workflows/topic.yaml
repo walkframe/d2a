@@ -63,6 +63,8 @@ jobs:
                   ALTER DATABASE d2a CHARACTER SET utf8; \
                   SHOW VARIABLES like 'char%'; \
                 "
+      - name: Install requirements
+        run: sudo apt-get install gdal-bin
       - run: tox -- -vv
         env:
           DB_HOST: localhost
