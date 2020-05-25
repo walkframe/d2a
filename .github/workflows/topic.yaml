@@ -8,7 +8,7 @@ jobs:
     runs-on: ubuntu-latest
     services:
       postgres:
-        image: postgres:12
+        image: postgis/postgis:12-master
         env:
           POSTGRES_USER: d2a
           POSTGRES_PASSWORD: d2a
@@ -40,17 +40,12 @@ jobs:
 
     steps:
       - uses: actions/checkout@v1
-      - name: Set up PostGIS
-        uses: walkframe/postgis-action@v1.1.1
-        with:
-          postgresql-db: d2a
-          postgresql-user: d2a
-          postgresql-password: d2a
       - name: Set up Python
         uses: actions/setup-python@v1.1.1
         with:
           python-version: ${{ matrix.python-version }}
-      - run: sudo apt-get install python3-dev libmysqlclient-dev libpq-dev
+      - name: Install requirements
+        run: sudo apt-get install python3-dev libmysqlclient-dev libpq-dev gdal-bin
       - run: echo "Django==${{ matrix.django-version }}" > django.txt
       - run: echo "SQLAlchemy==${{ matrix.alchemy-version }}" > sqlalchemy.txt
       - run: pip install tox
@@ -67,8 +62,6 @@ jobs:
                   ALTER DATABASE d2a CHARACTER SET utf8; \
                   SHOW VARIABLES like 'char%'; \
                 "
-      - name: Install requirements
-        run: sudo apt-get install gdal-bin
       - run: tox -- -vv
         env:
           DB_HOST: localhost
