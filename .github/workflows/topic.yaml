@@ -19,7 +19,7 @@ jobs:
 
       mysql:
         #image: mysql:5.7
-        image: mariadb:10.4
+        image: mariadb:latest
         env:
           MYSQL_ROOT_PASSWORD: root
           MYSQL_DATABASE: d2a
