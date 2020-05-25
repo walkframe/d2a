@@ -41,7 +41,11 @@ jobs:
     steps:
       - uses: actions/checkout@v1
       - name: Set up PostGIS
-        uses: walkframe/postgis-action@v1.1.0
+        uses: walkframe/postgis-action@v1.1.1
+        with:
+          postgresql-db: d2a
+          postgresql-user: d2a
+          postgresql-password: d2a
       - name: Set up Python
         uses: actions/setup-python@v1.1.1
         with:
