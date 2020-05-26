@@ -393,7 +393,10 @@ execute
   [<d2a.book object at 0x7f3cec539358>]
   # And do something you want to do ;)
 
-`GeoDjango-GeoAlchemy2 translation demo <https://github.com/walkframe/d2a/blob/master/demo_geoalchemy2.rst>`__
+GeoDjango
+--------------
+
+- `GeoDjango-GeoAlchemy2 translation demo <https://github.com/walkframe/d2a/blob/master/demo_geoalchemy2.rst>`__
 
 Links
 =====
@@ -407,6 +410,7 @@ History
   - 2020-05-26
   - Dropped support for `django1.11`
   - Changed key format. (`prefix:_` to `around:__`)
+  - Set up continuous deployment to PyPI.
 
 :2.4.x:
 
@@ -433,7 +437,6 @@ History
 :2.3.x:
   
   - 2020-05-25
-
   - GeoAlchemy2 support.
 
     - It translates 
