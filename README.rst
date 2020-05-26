@@ -401,6 +401,28 @@ Links
 
 History
 =======
+:2.4.x:
+
+  - 2020-05-XX
+  - Add postgres fields
+
+    - `CIText fields <https://docs.djangoproject.com/en/3.0/ref/contrib/postgres/fields/#citext-fields>`__
+
+      - CICharField
+      - CIEmailField
+      - CITextField
+    
+    - `Range fields <https://docs.djangoproject.com/en/3.0/ref/contrib/postgres/fields/#range-fields>`__
+
+      - IntegerRangeField
+      - BigIntegerRangeField
+      - DecimalRangeField
+      - FloatRangeField
+      - DateTimeRangeField
+      - DateRangeField
+
+    - `HStoreField <https://docs.djangoproject.com/en/3.0/ref/contrib/postgres/fields/#hstorefield>`__
+
 :2.3.x:
   
   :2020-05-25:
