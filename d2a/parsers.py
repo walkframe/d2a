@@ -36,8 +36,8 @@ def parse_field(field):
         info['default'] = field.default
 
     info.update(mapping[field_type])
-    while '_callback' in info:
-        result = info.pop('_callback')(field)
+    while '__callback__' in info:
+        result = info.pop('__callback__')(field)
         if isinstance(result, tuple):
             result, field = result
         info.update(result)

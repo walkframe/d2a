@@ -30,7 +30,7 @@ existing = {}
 
 
 def _extract_kwargs(kwargs):
-    return {k: v for k, v in kwargs.items() if not k.startswith('_')}
+    return {k: v for k, v in kwargs.items() if not (k.startswith('__') and k.endswith('__'))}
 
 
 def declare(django_model, db_type=AUTO_DETECTED_DB_TYPE, back_type='backref'):
@@ -50,40 +50,40 @@ def declare(django_model, db_type=AUTO_DETECTED_DB_TYPE, back_type='backref'):
     rel_options = OrderedDict()
     attrs = OrderedDict({'__tablename__': model_info['table_name']})
     for name, fields in model_info['fields'].items():
-        rel_option = fields.get('_rel_option', {})
+        rel_option = fields.get('__rel_kwargs__', {})
         if rel_option:
             rel_options[name] = rel_option
 
         col_types = {}
         col_type_options = {}
         for _db_type in DB_TYPES:
-            col_types[_db_type] = fields.get('_{}_type'.format(_db_type), None)
-            col_type_options[_db_type] = fields.get('_{}_type_option'.format(_db_type), {})
+            col_types[_db_type] = fields.get('__{}_type__'.format(_db_type), None)
+            col_type_options[_db_type] = fields.get('__{}_type_kwargs__'.format(_db_type), {})
 
         type_key = 'default' if col_types.get(db_type) is None else db_type
         if col_types[type_key]:
             col_args = [col_types[type_key](**col_type_options[type_key])]
-            if '_fk_option' in fields:
-                col_args.append(ForeignKey(**_extract_kwargs(fields['_fk_option'])))
+            if '__fk_kwargs__' in fields:
+                col_args.append(ForeignKey(**_extract_kwargs(fields['__fk_kwargs__'])))
 
             column = attrs[name] = Column(*col_args, **_extract_kwargs(fields))
             rel_option['foreign_keys'] = [column]
 
     for logical_name, rel_option in rel_options.items():
-        if '_secondary_model' in rel_option:
-            secondary = rel_option['secondary'] = declare(rel_option['_secondary_model'], db_type=db_type, back_type=back_type).__table__
-            target_field = rel_option['_target_field']
-            rel_option['primaryjoin'] = attrs[target_field] == secondary.c[rel_option['_remote_primary_field']]
-            rel_option['secondaryjoin'] = attrs[target_field] == secondary.c[rel_option['_remote_secondary_field']]
+        if '__secondary_model__' in rel_option:
+            secondary = rel_option['secondary'] = declare(rel_option['__secondary_model__'], db_type=db_type, back_type=back_type).__table__
+            target_field = rel_option['__target_field__']
+            rel_option['primaryjoin'] = attrs[target_field] == secondary.c[rel_option['__remote_primary_field__']]
+            rel_option['secondaryjoin'] = attrs[target_field] == secondary.c[rel_option['__remote_secondary_field__']]
         
-        if '_logical_name' in rel_option:
-            logical_name = rel_option['_logical_name']
+        if '__logical_name__' in rel_option:
+            logical_name = rel_option['__logical_name__']
 
-        back = rel_option.get('_back', None)
+        back = rel_option.get('__back__', None)
         if back and back_type:
             rel_option[back_type] = back.rstrip('+')
 
-        attrs[logical_name] = relationship(rel_option['_target'], **_extract_kwargs(rel_option))
+        attrs[logical_name] = relationship(rel_option['__target__'], **_extract_kwargs(rel_option))
 
     cls = existing[django_model] = type(model_info['table_name'], (Base,), attrs)
     return cls

@@ -14,9 +14,9 @@ Mapping definition
 
 geo_mapping = {
     models.GeometryField: {
-        '_callback': lambda f: {
-            '_default_type': geotypes.Geography if f.geography else geotypes.Geometry,
-            '_default_type_option': {
+        '__callback__': lambda f: {
+            '__default_type__': geotypes.Geography if f.geography else geotypes.Geometry,
+            '__default_type_kwargs__': {
                 'geometry_type': f.geom_type,
                 'srid': f.srid,
                 'dimension': f.dim,
@@ -25,9 +25,9 @@ geo_mapping = {
         },
     },
     models.PointField: {
-        '_callback': lambda f: {
-            '_default_type': geotypes.Geography if f.geography else geotypes.Geometry,
-            '_default_type_option': {
+        '__callback__': lambda f: {
+            '__default_type__': geotypes.Geography if f.geography else geotypes.Geometry,
+            '__default_type_kwargs__': {
                 'geometry_type': f.geom_type,
                 'srid': f.srid,
                 'dimension': f.dim,
@@ -36,9 +36,9 @@ geo_mapping = {
         },
     },
     models.LineStringField: {
-        '_callback': lambda f: {
-            '_default_type': geotypes.Geography if f.geography else geotypes.Geometry,
-            '_default_type_option': {
+        '__callback__': lambda f: {
+            '__default_type__': geotypes.Geography if f.geography else geotypes.Geometry,
+            '__default_type_kwargs__': {
                 'geometry_type': f.geom_type,
                 'srid': f.srid,
                 'dimension': f.dim,
@@ -47,9 +47,9 @@ geo_mapping = {
         },
     },
     models.PolygonField: {
-        '_callback': lambda f: {
-            '_default_type': geotypes.Geography if f.geography else geotypes.Geometry,
-            '_default_type_option': {
+        '__callback__': lambda f: {
+            '__default_type__': geotypes.Geography if f.geography else geotypes.Geometry,
+            '__default_type_kwargs__': {
                 'geometry_type': f.geom_type,
                 'srid': f.srid,
                 'dimension': f.dim,
@@ -58,9 +58,9 @@ geo_mapping = {
         },
     },
     models.MultiPointField: {
-        '_callback': lambda f: {
-            '_default_type': geotypes.Geography if f.geography else geotypes.Geometry,
-            '_default_type_option': {
+        '__callback__': lambda f: {
+            '__default_type__': geotypes.Geography if f.geography else geotypes.Geometry,
+            '__default_type_kwargs__': {
                 'geometry_type': f.geom_type,
                 'srid': f.srid,
                 'dimension': f.dim,
@@ -69,9 +69,9 @@ geo_mapping = {
         },
     },
     models.MultiLineStringField: {
-        '_callback': lambda f: {
-            '_default_type': geotypes.Geography if f.geography else geotypes.Geometry,
-            '_default_type_option': {
+        '__callback__': lambda f: {
+            '__default_type__': geotypes.Geography if f.geography else geotypes.Geometry,
+            '__default_type_kwargs__': {
                 'geometry_type': f.geom_type,
                 'srid': f.srid,
                 'dimension': f.dim,
@@ -80,9 +80,9 @@ geo_mapping = {
         },
     },
     models.MultiPolygonField: {
-        '_callback': lambda f: {
-            '_default_type': geotypes.Geography if f.geography else geotypes.Geometry,
-            '_default_type_option': {
+        '__callback__': lambda f: {
+            '__default_type__': geotypes.Geography if f.geography else geotypes.Geometry,
+            '__default_type_kwargs__': {
                 'geometry_type': f.geom_type,
                 'srid': f.srid,
                 'dimension': f.dim,
@@ -91,9 +91,9 @@ geo_mapping = {
         },
     },
     models.GeometryCollectionField: {
-        '_callback': lambda f: {
-            '_default_type': geotypes.Geography if f.geography else geotypes.Geometry,
-            '_default_type_option': {
+        '__callback__': lambda f: {
+            '__default_type__': geotypes.Geography if f.geography else geotypes.Geometry,
+            '__default_type_kwargs__': {
                 'geometry_type': f.geom_type,
                 'srid': f.srid,
                 'dimension': f.dim,
@@ -102,9 +102,9 @@ geo_mapping = {
         },
     },
     models.RasterField: {
-        '_callback': lambda f: {
-            '_default_type': geotypes.Raster,
-            '_default_type_option': {
+        '__callback__': lambda f: {
+            '__default_type__': geotypes.Raster,
+            '__default_type_kwargs__': {
                 'geometry_type': f.geom_type,
                 'srid': f.srid,
                 'spatial_index': f.spatial_index,
