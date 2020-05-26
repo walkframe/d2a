@@ -70,3 +70,24 @@ jobs:
           MYSQL_USER: root
           MYSQL_PASSWORD: root
 
+  deploy:
+    runs-on: ubuntu-latest
+    name: pypi upload
+    steps:
+      - uses: actions/checkout@v1
+      - name: Set up Python
+        uses: actions/setup-python@v1.1.1
+        with:
+          python-version: 3.8
+
+      - name: Install requirements for upload.
+        run: pip install -u setuptools wheel twine
+
+      - name: Build dists.
+        run: ./setup.py sdist bdist_wheel
+      
+      - name: Upload dists.
+        run: twine upload dist/* --non-interactive
+        env:
+          TWINE_USERNAME: __token__
+          TWINE_PASSWORD: ${{ secrets.pypi_token }}

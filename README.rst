@@ -118,6 +118,7 @@ Also it can extract model declared implicitly depending on m2m field.
             # Evaluates ExtendedImageField as ImageField
             ExtendedImageField: models.ImageField,
         },
+        'USE_GEOALCHEMY2': True,  # default: False
     }
 
 

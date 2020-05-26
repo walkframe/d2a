@@ -472,6 +472,7 @@ except AttributeError:
     pass
 
 try:
+    # deprecated
     mapping[postgres_fields.FloatRangeField] = {
         '__default_type__': postgresql_types.NUMRANGE,
         '__postgresql_type__': postgresql_types.NUMRANGE,
