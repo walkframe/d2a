@@ -12,9 +12,9 @@ Requirements
 
   - Tested with 3.5, 3.8
 
-- Django: 1.11, 2.x, 3.x
+- Django: 2.x, 3.x
   
-  - Tested with 1.11.27, 2.2.9, 3.0.1, 3.0.3
+  - Tested with 2.2.9, 3.0.1, 3.0.3
 
 - SQLAlchemy: 1.1 or later.
 
