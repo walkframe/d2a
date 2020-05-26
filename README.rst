@@ -402,9 +402,15 @@ Links
 
 History
 =======
+:2.5.x:
+
+  - 2020-05-26
+  - Dropped support for `django1.11`
+  - Changed key format. (`prefix:_` to `around:__`)
+
 :2.4.x:
 
-  - 2020-05-XX
+  - 2020-05-26
   - Add postgres fields
 
     - `CIText fields <https://docs.djangoproject.com/en/3.0/ref/contrib/postgres/fields/#citext-fields>`__
@@ -426,14 +432,14 @@ History
 
 :2.3.x:
   
-  :2020-05-25:
+  - 2020-05-25
 
-    - GeoAlchemy2 support.
+  - GeoAlchemy2 support.
 
-      - It translates 
-        `GeoDjango fields <https://docs.djangoproject.com/en/3.0/ref/contrib/gis/model-api/>`__
-        into 
-        `GeoAlchemy2 fields <https://geoalchemy-2.readthedocs.io/en/0.2.6/types.html>`__.
+    - It translates 
+      `GeoDjango fields <https://docs.djangoproject.com/en/3.0/ref/contrib/gis/model-api/>`__
+      into 
+      `GeoAlchemy2 fields <https://geoalchemy-2.readthedocs.io/en/0.2.6/types.html>`__.
 
 :2.2.x:
 
