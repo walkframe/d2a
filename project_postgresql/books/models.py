@@ -2,7 +2,7 @@
 import uuid
 
 from django.db import models
-from django.contrib.postgres.fields import JSONField, ArrayField
+from django.contrib.postgres.fields import JSONField, ArrayField, CICharField
 
 
 class CategoryRelation(models.Model):
@@ -23,7 +23,7 @@ class Author(models.Model):
 
 
 class Category(models.Model):
-    name = models.CharField(max_length=30)
+    name = CICharField(max_length=30)
     created = models.DateTimeField(auto_now=True)
     related_coming = models.ManyToManyField('self', symmetrical=False,
                                             through='CategoryRelation', related_name='related_going')

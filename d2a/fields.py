@@ -13,6 +13,7 @@ from sqlalchemy.dialects import (
 )
 
 from .compat import M2MField
+from .original_types import CIText
 
 """
 Mapping definition
@@ -36,6 +37,21 @@ Mapping definition
   - https://github.com/sqlalchemy/sqlalchemy/blob/master/lib/sqlalchemy/dialects/oracle/__init__.py
 
 """
+
+
+def alias(new_field, existing_field):
+    """It defines a new converting rule same with existing one.
+
+    :param django.db.models.fields.Field new_field: A field which you want to add.
+    :param django.db.models.fields.Field existing_field: A field copied from.
+    """
+    mapping[new_field] = mapping[existing_field]
+
+
+def alias_dict(extra_mapping={}):
+    for new_field, existing_field in extra_mapping.items():
+        alias(new_field, existing_field)
+
 
 D2A_CONFIG = getattr(settings, 'D2A_CONFIG', {})
 
@@ -367,14 +383,22 @@ except AttributeError:
 
 try:
     mapping[postgres_fields.ArrayField] = {
-        '_default_type': default_types.ARRAY,
+        '_default_type': postgresql_types.ARRAY,
         '_postgresql_type': postgresql_types.ARRAY,
         '_mysql_type': default_types.ARRAY,
         '_oracle_type': default_types.ARRAY,
         '_callback': lambda f: {
             '_default_type_option': {'item_type': mapping[type(f.base_field)]['_default_type']},
             '_postgresql_type_option': {'item_type': mapping[type(f.base_field)].get('_postgresql_type') or mapping[type(f.base_field)]['_default_type']},
-        }
+        },
+    }
+except AttributeError:
+    pass
+
+try:
+    mapping[postgres_fields.HStoreField] = {
+        '_default_type': postgresql_types.HSTORE,
+        '_postgresql_type': postgresql_types.HSTORE,
     }
 except AttributeError:
     pass
@@ -393,7 +417,80 @@ mapping[JSONType] = JSONRule
 try:
     mapping[postgres_fields.JSONField] = {
         **JSONRule,
+        '_default_type': postgresql_types.JSONB,
         '_postgresql_type': postgresql_types.JSONB,
+    }
+except AttributeError:
+    pass
+
+try:
+    mapping[postgres_fields.CICharField] = {
+        '_default_type': CIText,
+        '_postgresql_type': CIText,
+    }
+except AttributeError:
+    pass
+
+try:
+    mapping[postgres_fields.CIEmailField] = {
+        '_default_type': CIText,
+        '_postgresql_type': CIText,
+    }
+except AttributeError:
+    pass
+
+try:
+    mapping[postgres_fields.CITextField] = {
+        '_default_type': CIText,
+        '_postgresql_type': CIText,
+    }
+except AttributeError:
+    pass
+
+try:
+    mapping[postgres_fields.IntegerRangeField] = {
+        '_default_type': postgresql_types.INT4RANGE,
+        '_postgresql_type': postgresql_types.INT4RANGE,
+    }
+except AttributeError:
+    pass
+
+try:
+    mapping[postgres_fields.BigIntegerRangeField] = {
+        '_default_type': postgresql_types.INT8RANGE,
+        '_postgresql_type': postgresql_types.INT8RANGE,
+    }
+except AttributeError:
+    pass
+
+try:
+    mapping[postgres_fields.DecimalRangeField] = {
+        '_default_type': postgresql_types.NUMRANGE,
+        '_postgresql_type': postgresql_types.NUMRANGE,
+    }
+except AttributeError:
+    pass
+
+try:
+    mapping[postgres_fields.FloatRangeField] = {
+        '_default_type': postgresql_types.NUMRANGE,
+        '_postgresql_type': postgresql_types.NUMRANGE,
+    }
+except AttributeError:
+    pass
+
+try:
+    mapping[postgres_fields.DateTimeRangeField] = {
+        '_default_type': postgresql_types.TSTZRANGE if settings.USE_TZ else postgresql_types.TSRANGE,
+        '_postgresql_type': postgresql_types.TSTZRANGE if settings.USE_TZ else postgresql_types.TSRANGE,
+    }
+except AttributeError:
+    pass
+
+try:
+    mapping[postgres_fields.DateRangeField] = {
+        '_default_type': postgresql_types.DATERANGE,
+        '_postgresql_type': postgresql_types.DATERANGE,
     }
 except AttributeError:
     pass
@@ -405,17 +502,3 @@ try:
 except (ImportError, AttributeError) as e:
     if D2A_CONFIG.get('USE_GEOALCHEMY2', False):
         warnings.warn('An error occured: {}. HINT: GeoAlchemy2 should be installed when you use GeoDjango.'.format(e))
-
-
-def alias(new_field, existing_field):
-    """It defines a new converting rule same with existing one.
-
-    :param django.db.models.fields.Field new_field: A field which you want to add.
-    :param django.db.models.fields.Field existing_field: A field copied from.
-    """
-    mapping[new_field] = mapping[existing_field]
-
-
-def alias_dict(mapping={}):
-    for new_field, existing_field in mapping.items():
-        alias(new_field, existing_field)
