@@ -4,7 +4,7 @@ from django.conf import settings
 from django.db.models.fields import Field
 
 
-MSG = "Config of {} is not defined. HINT: Use alias method or set ALIASES."
+MSG = "[SKIPPED] Config of {} is not defined. HINT: Use alias method or set ALIASES."
 
 
 class MissingWarning(UserWarning):

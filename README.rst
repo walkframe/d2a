@@ -196,6 +196,22 @@ you can register the field as the other field using `alias` or `alias_dict` meth
       ExtendedImageField: ImageField,
   })
 
+When the translation rule is not found, it will warn you and continue. (2.6.x later)
+
+You can change the behavior by specifying the following values to ``D2A_CONFIG['MISSING']``.
+
+:None: Ignores the warning.  
+:Field: Uses the specifying field instead of the unknown field.
+
+  e.g. Using ``CharField``
+
+  .. code-block:: python3
+
+    from django.db.models import CharField
+    
+    D2A_CONFIG = {
+        'MISSING': CharField,
+    }
 
 .. note::
 
@@ -405,6 +421,10 @@ Links
 
 History
 =======
+:2.6.x:
+  - 2020-06-06
+  - Add `MISSING` option.
+
 :2.5.x:
 
   - 2020-05-26
