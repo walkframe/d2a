@@ -1,5 +1,6 @@
 # coding: utf-8
 import logging
+import warnings
 from collections import OrderedDict
 
 
@@ -9,6 +10,7 @@ from django.db import models
 
 from .fields import mapping
 from .compat import M2MField
+from .missing import fallback
 
 logger = logging.getLogger(__name__)
 
@@ -35,7 +37,13 @@ def parse_field(field):
     if getattr(field, 'default', NOT_PROVIDED) is not NOT_PROVIDED:
         info['default'] = field.default
 
-    info.update(mapping[field_type])
+    try:
+        conf = mapping[field_type]
+    except KeyError as e:
+        alt = fallback(field_type, e)
+        conf = mapping.get(alt, {})
+    
+    info.update(conf)
     while '__callback__' in info:
         result = info.pop('__callback__')(field)
         if isinstance(result, tuple):

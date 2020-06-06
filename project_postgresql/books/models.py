@@ -5,6 +5,10 @@ from django.db import models
 from django.contrib.postgres.fields import JSONField, ArrayField, CICharField
 
 
+class CustomEmailField(models.EmailField):
+    pass
+
+
 class CategoryRelation(models.Model):
     category1 = models.ForeignKey('Category', related_name='parents', on_delete=models.CASCADE)
     category2 = models.ForeignKey('Category', related_name='children', on_delete=models.CASCADE)
@@ -17,6 +21,7 @@ class CategoryRelation(models.Model):
 class Author(models.Model):
     name = models.CharField(max_length=255)
     age = models.PositiveSmallIntegerField()
+    email = CustomEmailField(null=True)
 
     class Meta:
         db_table = 'author'

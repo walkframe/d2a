@@ -84,7 +84,12 @@ class TestPostgreSQL(object):
                 'type': sa.dialects.postgresql.SMALLINT,
                 'nullable': False,
             },
-
+            'email': {
+                'primary_key': False,
+                'unique': False,
+                'type': sa.dialects.postgresql.VARCHAR,
+                'nullable': True,
+            },
         }
         assert actual == expected
 

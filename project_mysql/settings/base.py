@@ -137,4 +137,5 @@ D2A_CONFIG = {
     'AUTOLOAD': {
         'module': 'modelsa',
     },
+    'MISSING': None,
 }
