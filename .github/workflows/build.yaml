@@ -44,8 +44,8 @@ jobs:
           python-version: ${{ matrix.python-version }}
       - name: Install requirements
         run: sudo apt-get install python3-dev libmysqlclient-dev libpq-dev gdal-bin
-      - run: echo "Django==${{ matrix.django-version }}" > django.txt
-      - run: echo "SQLAlchemy==${{ matrix.alchemy-version }}" > sqlalchemy.txt
+      - run: echo "Django==${{ matrix.django-version }}" > requirements/django.txt
+      - run: echo "SQLAlchemy==${{ matrix.alchemy-version }}" > requirements/sqlalchemy.txt
       - run: pip install tox
       - run: |
           mysql -ud2a -pd2a \
