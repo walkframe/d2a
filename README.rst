@@ -107,8 +107,6 @@ Also it can extract model declared implicitly depending on m2m field.
         'AUTOLOAD': { # optional
             # module name: It can be used different module name from `models_sqla`.
             'module': 'modelsa',  # optional, default: 'models_sqla'
-            # waiting seconds during autoloading
-            'seconds': 5,  # default: 1
             # transfer function's args after 'exports' arg.
             'option': {  # optional
                 'db_type': 'postgresql',  # default: 'default'
