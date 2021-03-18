@@ -74,11 +74,11 @@ jobs:
     if: github.ref == 'refs/heads/master'
     name: pypi upload
     steps:
-      - uses: actions/checkout@v1
+      - uses: actions/checkout@v2
       - name: Set up Python
-        uses: actions/setup-python@v1.1.1
+        uses: actions/setup-python@v2
         with:
-          python-version: 3.8
+          python-version: 3.9
 
       - name: Install requirements for upload.
         run: pip install -U setuptools wheel twine
