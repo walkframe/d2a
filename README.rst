@@ -14,7 +14,7 @@ Requirements
 ============
 - Python: 3.5 or later.
 
-  - Tested with 3.5, 3.8
+  - Tested with 3.5, 3.9
 
 - Django: 2.x, 3.x
   
