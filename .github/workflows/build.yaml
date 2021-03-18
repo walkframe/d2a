@@ -30,11 +30,11 @@ jobs:
     strategy:
       max-parallel: 4
       matrix:
-        python-version: ['3.5', '3.8']
-        django-version: ['2.2.9', '3.1.1']
-        alchemy-version: ['1.1.0', '1.3.19']
+        python-version: ["3.5", "3.9"]
+        django-version: ["2.2.9", "3.1.1"]
+        alchemy-version: ["1.1.0", "1.3.19"]
         exclude:
-          - {python-version: 3.5, django-version: 3.1.1}
+          - { python-version: 3.5, django-version: 3.1.1 }
 
     steps:
       - uses: actions/checkout@v1
@@ -85,9 +85,9 @@ jobs:
 
       - name: Build dists.
         run: ./setup.py sdist bdist_wheel
-      
+
       - name: Upload dists.
-        run: twine upload dist/* --non-interactive --skip-existing 
+        run: twine upload dist/* --non-interactive --skip-existing
         env:
           TWINE_USERNAME: __token__
           TWINE_PASSWORD: ${{ secrets.PYPI_TOKEN }}
