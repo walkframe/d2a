@@ -22,7 +22,7 @@ Requirements
 
 - SQLAlchemy: 1.1 or later.
 
-  - Tested with 1.1.0, 1.3.19
+  - Tested with 1.1.0, 1.4.1
 
 Installation
 ============
