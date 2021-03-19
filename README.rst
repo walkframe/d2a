@@ -12,13 +12,13 @@
 
 Requirements
 ============
-- Python: 3.6 or later.
+- Python: 3.5 or later.
 
   - Tested with 3.6, 3.9
 
 - Django: 2.x, 3.x
   
-  - Tested with 2.2.9, 3.0.1, 3.1.6
+  - Tested with 2.2.9, 3.0.1, 3.1.1
 
 - SQLAlchemy: 1.1 or later.
 
@@ -423,12 +423,16 @@ Links
 
 History
 =======
-:2.7.x:
+:2.8.x:
 
-  - 2020-06-06
+  - 2021-03-19
   - Dropped Python `3.5.x`.
   - Supported Python `3.9.x`.
   - Supported SQLAlchemy `1.4.x`.
+
+:2.7.x:
+
+  - Dropped sleep option.
 
 :2.6.x:
   - 2020-06-06
