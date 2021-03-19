@@ -14,7 +14,7 @@ Requirements
 ============
 - Python: 3.5 or later.
 
-  - Tested with 3.5, 3.8
+  - Tested with 3.6, 3.9
 
 - Django: 2.x, 3.x
   
@@ -22,7 +22,7 @@ Requirements
 
 - SQLAlchemy: 1.1 or later.
 
-  - Tested with 1.1.0, 1.3.19
+  - Tested with 1.1.0, 1.4.1
 
 Installation
 ============
@@ -423,6 +423,17 @@ Links
 
 History
 =======
+:2.8.x:
+
+  - 2021-03-19
+  - Dropped Python `3.5.x`.
+  - Supported Python `3.9.x`.
+  - Supported SQLAlchemy `1.4.x`.
+
+:2.7.x:
+
+  - Dropped sleep option.
+
 :2.6.x:
   - 2020-06-06
   - Add `MISSING` option.
