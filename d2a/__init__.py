@@ -11,8 +11,8 @@ from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import relationship
 
 from .parsers import parse_models, parse_model
-from .utils import get_camelcase
-from .fields import alias, alias_dict, JSONType
+
+from .fields import alias, alias_dict, JSONType, NAME_FORMATTER
 from .db import (
     AUTO_DETECTED_DB_TYPE,
     query_expression, execute_expression,
@@ -35,11 +35,9 @@ def _extract_kwargs(kwargs):
 
 def declare(django_model, db_type=AUTO_DETECTED_DB_TYPE, back_type='backref'):
     """It converts a django model to alchemy orm object.
-
     :param django.db.models.base.Model django_model: Django model object or equivalent object.
     :param str db_type: Database type, for example `postgresql`. If omitted this option, it will be detected from django settings.
     :param str back_type: Back relation type, `backref` or ``None`` (it does not support `back_populates`).
-
     This function is also called from `transfer` :)
     """
 
@@ -72,16 +70,13 @@ def declare(django_model, db_type=AUTO_DETECTED_DB_TYPE, back_type='backref'):
     for logical_name, rel_option in rel_options.items():
         if '__secondary_model__' in rel_option:
             secondary = rel_option['secondary'] = declare(rel_option['__secondary_model__'], db_type=db_type, back_type=back_type).__table__
-            target_field = rel_option['__target_field__']
-            rel_option['primaryjoin'] = attrs[target_field] == secondary.c[rel_option['__remote_primary_field__']]
-            rel_option['secondaryjoin'] = attrs[target_field] == secondary.c[rel_option['__remote_secondary_field__']]
         
         if '__logical_name__' in rel_option:
             logical_name = rel_option['__logical_name__']
 
         back = rel_option.get('__back__', None)
         if back and back_type:
-            rel_option[back_type] = back.rstrip('+')
+            rel_option[back_type] = back.rstrip('+').lower()
 
         attrs[logical_name] = relationship(rel_option['__target__'], **_extract_kwargs(rel_option))
 
@@ -89,7 +84,7 @@ def declare(django_model, db_type=AUTO_DETECTED_DB_TYPE, back_type='backref'):
     return cls
 
 
-def transfer(models, exports, db_type=AUTO_DETECTED_DB_TYPE, back_type='backref', as_table=False, name_formatter=get_camelcase):
+def transfer(models, exports, db_type=AUTO_DETECTED_DB_TYPE, back_type='backref', as_table=False, name_formatter=NAME_FORMATTER):
     """It makes sqlalchemy model objects from django models.
 
     :param module models: Django `models.py` or equivalent object.

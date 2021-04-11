@@ -139,12 +139,3 @@ USE_TZ = True
 STATIC_URL = '/static/'
 
 EMAIL_BACKEND = 'django.core.mail.backends.dummy.EmailBackend'
-
-from django.db.models import CharField
-
-D2A_CONFIG = {
-    'AUTOLOAD': {
-        'sleep': 3,
-    },
-    'MISSING': CharField,
-}

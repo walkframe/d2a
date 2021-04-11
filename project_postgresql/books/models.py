@@ -4,9 +4,7 @@ import uuid
 from django.db import models
 from django.contrib.postgres.fields import JSONField, ArrayField, CICharField
 
-
-class CustomEmailField(models.EmailField):
-    pass
+from .fields import CustomEmailField
 
 
 class CategoryRelation(models.Model):
