@@ -9,7 +9,7 @@ from sqlalchemy import (
 
 @pytest.fixture(scope='function')
 def author_model():
-    from models_sqla import Author
+    from books.modelsa import Author
     return Author
 
 

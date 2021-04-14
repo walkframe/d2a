@@ -9,6 +9,9 @@ class D2aConfig(AppConfig):
 
     def ready(self):
         import d2a
+        if d2a.D2A_CONFIG.get("AUTOLOAD") is False:
+            return
+
         t = threading.Thread(target=d2a.autoload)
         t.start()
         t.join()

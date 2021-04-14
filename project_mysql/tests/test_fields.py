@@ -22,17 +22,12 @@ def info(table):
 
 class TestMySQL(object):
     @pytest.fixture
-    def books(self):
-        from books import modelsa
-        return modelsa
+    def models_sqla(self):
+        import models_sqla
+        return models_sqla
 
-    @pytest.fixture
-    def sales(self):
-        from sales import modelsa
-        return modelsa
-
-    def test_CategoryRelation(self, books):
-        actual = info(books.CategoryRelation.__table__)
+    def test_CategoryRelation(self, models_sqla):
+        actual = info(models_sqla.CategoryRelation.__table__)
         expected = {
             'id': {
                 'primary_key': True,
@@ -61,8 +56,8 @@ class TestMySQL(object):
         }
         assert actual == expected
 
-    def test_Author(self, books):
-        actual = info(books.Author.__table__)
+    def test_Author(self, models_sqla):
+        actual = info(models_sqla.Author.__table__)
         expected = {
             'id': {
                 'primary_key': True,
@@ -85,8 +80,8 @@ class TestMySQL(object):
         }
         assert actual == expected
 
-    def test_Category(self, books):
-        actual = info(books.Category.__table__)
+    def test_Category(self, models_sqla):
+        actual = info(models_sqla.Category.__table__)
         expected = {
             'id': {
                 'primary_key': True,
@@ -109,8 +104,8 @@ class TestMySQL(object):
         }
         assert actual == expected
 
-    def test_Book(self, books):
-        actual = info(books.Book.__table__)
+    def test_Book(self, models_sqla):
+        actual = info(models_sqla.Book.__table__)
         expected = {
             'id': {
                 'primary_key': True,
@@ -153,8 +148,8 @@ class TestMySQL(object):
         }
         assert actual == expected
 
-    def test_BookCategory(self, books):
-        actual = info(books.BookCategory.__table__)
+    def test_BookCategory(self, models_sqla):
+        actual = info(models_sqla.BookCategory.__table__)
         expected = {
             'id': {
                 'primary_key': True,
@@ -177,8 +172,8 @@ class TestMySQL(object):
         }
         assert actual == expected
 
-    def test_Sales(self, sales):
-        actual = info(sales.Sales.__table__)
+    def test_Sales(self, models_sqla):
+        actual = info(models_sqla.Sales.__table__)
         expected = {
             'id': {
                 'primary_key': True,
