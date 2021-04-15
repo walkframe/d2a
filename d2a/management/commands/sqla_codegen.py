@@ -124,6 +124,8 @@ def render_args(fields: dict, context: dict={}):
     for k, v in _extract_kwargs(fields).items():
         if isinstance(v, str):
             v = f"'{v}'".format(**context)
+        elif k == "foreign_keys" and isinstance(v, list):
+            v = f"[{', '.join(v)}]"
         elif inspect.isclass(v) and issubclass(v, TypeEngine):
             v = reverse_mapping[v]
         kwargs += [f"{k}={v}"]
@@ -162,7 +164,7 @@ Base = declarative_base()
 {% for model in models %}
 class {{ model.model_name }}(Base):
     __tablename__ = '{{ model.table_name }}'
-    __table_args__ = {'extend_existing': True}
+    # __table_args__ = {'extend_existing': True}
     {% for name, args in model.columns.items %}
     {{ name }} = Column({% for arg in args %}
         {{ arg | safe }},{% endfor %}

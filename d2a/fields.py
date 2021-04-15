@@ -284,7 +284,6 @@ mapping = {
                 '__back__': f.related_query_name().rstrip('+').lower(),
                 '__target__': f.related_model()._meta.db_table,
                 '__model__': f.related_model,
-                'primaryjoin': f"{NAME_FORMATTER(f.model._meta.object_name)}.{f.column} == {f.related_model._meta.object_name}.{f.foreign_related_fields[0].column}",
             },
             '__fk_kwargs__': {
                 'column': '{meta.db_table}.{meta.pk.attname}'.format(meta=f.related_model._meta),
@@ -301,7 +300,7 @@ mapping = {
                 '__target__': f.related_model()._meta.db_table,
                 '__model__': f.model,
                 'uselist': False,
-                'primaryjoin': f"{NAME_FORMATTER(f.model._meta.object_name)}.{f.column} == {f.related_model._meta.object_name}.{f.foreign_related_fields[0].column}",
+                #'primaryjoin': f"{f.column} == {f.related_model._meta.object_name}.{f.foreign_related_fields[0].column}",
             },
             '__fk_kwargs__': {
                 'column': '{meta.db_table}.{meta.pk.attname}'.format(meta=f.related_model._meta),
@@ -319,9 +318,10 @@ mapping = {
                 '__back__': f.field.related_query_name().rstrip('+').lower(),
                 '__target__': f.rel.model._meta.db_table,
                 '__model__': f.field.related_model,
-                'secondary': NAME_FORMATTER(f.rel.through._meta.object_name),
-                'primaryjoin': f"{f.rel.related_model._meta.object_name}.{f.rel.field.m2m_target_field_name()} == {NAME_FORMATTER(f.rel.through._meta.object_name)}.{f.rel.field._m2m_column_cache}",
-                'secondaryjoin': f"{NAME_FORMATTER(f.rel.through._meta.object_name)}.{f.rel.field._m2m_reverse_column_cache} == {f.rel.model._meta.object_name}.{f.rel.field.m2m_reverse_target_field_name()}",
+                # 'foreign_keys': [f"{NAME_FORMATTER(f.rel.through._meta.object_name)}.{f.rel.field._m2m_column_cache}"],
+                'secondary': f.rel.through._meta.db_table,
+                #'primaryjoin': f"{f.rel.related_model._meta.object_name}.{f.rel.field.m2m_target_field_name()} == {NAME_FORMATTER(f.rel.through._meta.object_name)}.{f.rel.field._m2m_column_cache}",
+                #'secondaryjoin': f"{NAME_FORMATTER(f.rel.through._meta.object_name)}.{f.rel.field._m2m_reverse_column_cache} == {f.rel.model._meta.object_name}.{f.rel.field.m2m_reverse_target_field_name()}",
             },
         } if not f.reverse else {}
     },

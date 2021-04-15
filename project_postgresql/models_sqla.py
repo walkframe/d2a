@@ -29,7 +29,7 @@ Base = declarative_base()
 
 class ContentType(Base):
     __tablename__ = 'django_content_type'
-    __table_args__ = {'extend_existing': True}
+    # __table_args__ = {'extend_existing': True}
     
     id = Column(
         postgresql_types.INTEGER(),
@@ -57,7 +57,7 @@ class ContentType(Base):
 
 class LogEntry(Base):
     __tablename__ = 'django_admin_log'
-    __table_args__ = {'extend_existing': True}
+    # __table_args__ = {'extend_existing': True}
     
     id = Column(
         postgresql_types.INTEGER(),
@@ -123,19 +123,15 @@ class LogEntry(Base):
     )
     user = relationship(
         'User',
-        primaryjoin='LogEntry.user_id == User.id',
-        backref='logentry',
     )
     content_type = relationship(
         'ContentType',
-        primaryjoin='LogEntry.content_type_id == ContentType.id',
-        backref='logentry',
     )
 
 
 class GroupPermissions(Base):
     __tablename__ = 'auth_group_permissions'
-    __table_args__ = {'extend_existing': True}
+    # __table_args__ = {'extend_existing': True}
     
     id = Column(
         postgresql_types.INTEGER(),
@@ -165,19 +161,15 @@ class GroupPermissions(Base):
     )
     group = relationship(
         'Group',
-        primaryjoin='GroupPermissions.group_id == Group.id',
-        backref='group_permissions',
     )
     permission = relationship(
         'Permission',
-        primaryjoin='GroupPermissions.permission_id == Permission.id',
-        backref='group_permissions',
     )
 
 
 class Group(Base):
     __tablename__ = 'auth_group'
-    __table_args__ = {'extend_existing': True}
+    # __table_args__ = {'extend_existing': True}
     
     id = Column(
         postgresql_types.INTEGER(),
@@ -196,16 +188,13 @@ class Group(Base):
     )
     permissions = relationship(
         'Permission',
-        secondary='GroupPermissions',
-        primaryjoin='Group.id == GroupPermissions.group_id',
-        secondaryjoin='GroupPermissions.permission_id == Permission.id',
-        backref='group',
+        secondary='auth_group_permissions',
     )
 
 
 class Permission(Base):
     __tablename__ = 'auth_permission'
-    __table_args__ = {'extend_existing': True}
+    # __table_args__ = {'extend_existing': True}
     
     id = Column(
         postgresql_types.INTEGER(),
@@ -240,14 +229,12 @@ class Permission(Base):
     )
     content_type = relationship(
         'ContentType',
-        primaryjoin='Permission.content_type_id == ContentType.id',
-        backref='permission',
     )
 
 
 class UserGroups(Base):
     __tablename__ = 'auth_user_groups'
-    __table_args__ = {'extend_existing': True}
+    # __table_args__ = {'extend_existing': True}
     
     id = Column(
         postgresql_types.INTEGER(),
@@ -277,19 +264,15 @@ class UserGroups(Base):
     )
     user = relationship(
         'User',
-        primaryjoin='UserGroups.user_id == User.id',
-        backref='user_groups',
     )
     group = relationship(
         'Group',
-        primaryjoin='UserGroups.group_id == Group.id',
-        backref='user_groups',
     )
 
 
 class UserUserPermissions(Base):
     __tablename__ = 'auth_user_user_permissions'
-    __table_args__ = {'extend_existing': True}
+    # __table_args__ = {'extend_existing': True}
     
     id = Column(
         postgresql_types.INTEGER(),
@@ -319,19 +302,15 @@ class UserUserPermissions(Base):
     )
     user = relationship(
         'User',
-        primaryjoin='UserUserPermissions.user_id == User.id',
-        backref='user_user_permissions',
     )
     permission = relationship(
         'Permission',
-        primaryjoin='UserUserPermissions.permission_id == Permission.id',
-        backref='user_user_permissions',
     )
 
 
 class User(Base):
     __tablename__ = 'auth_user'
-    __table_args__ = {'extend_existing': True}
+    # __table_args__ = {'extend_existing': True}
     
     id = Column(
         postgresql_types.INTEGER(),
@@ -416,23 +395,17 @@ class User(Base):
     )
     groups = relationship(
         'Group',
-        secondary='UserGroups',
-        primaryjoin='User.id == UserGroups.user_id',
-        secondaryjoin='UserGroups.group_id == Group.id',
-        backref='user',
+        secondary='auth_user_groups',
     )
     user_permissions = relationship(
         'Permission',
-        secondary='UserUserPermissions',
-        primaryjoin='User.id == UserUserPermissions.user_id',
-        secondaryjoin='UserUserPermissions.permission_id == Permission.id',
-        backref='user',
+        secondary='auth_user_user_permissions',
     )
 
 
 class Session(Base):
     __tablename__ = 'django_session'
-    __table_args__ = {'extend_existing': True}
+    # __table_args__ = {'extend_existing': True}
     
     session_key = Column(
         postgresql_types.VARCHAR(length=40),
@@ -459,7 +432,7 @@ class Session(Base):
 
 class Author(Base):
     __tablename__ = 'author'
-    __table_args__ = {'extend_existing': True}
+    # __table_args__ = {'extend_existing': True}
     
     id = Column(
         postgresql_types.INTEGER(),
@@ -494,7 +467,7 @@ class Author(Base):
 
 class BookCategory(Base):
     __tablename__ = 'book_category'
-    __table_args__ = {'extend_existing': True}
+    # __table_args__ = {'extend_existing': True}
     
     id = Column(
         postgresql_types.INTEGER(),
@@ -523,19 +496,15 @@ class BookCategory(Base):
     )
     book = relationship(
         'Book',
-        primaryjoin='BookCategory.book_id == Book.id',
-        backref='book_category',
     )
     category = relationship(
         'Category',
-        primaryjoin='BookCategory.category_id == Category.id',
-        backref='book_category',
     )
 
 
 class Book(Base):
     __tablename__ = 'book'
-    __table_args__ = {'extend_existing': True}
+    # __table_args__ = {'extend_existing': True}
     
     id = Column(
         postgresql_types.UUID(),
@@ -591,22 +560,17 @@ class Book(Base):
     )
     author = relationship(
         'Author',
-        primaryjoin='Book.author_id == Author.id',
-        backref='books',
     )
     category = relationship(
         'Category',
-        secondary='BookCategory',
-        primaryjoin='Book.id == BookCategory.book_id',
-        secondaryjoin='BookCategory.category_id == Category.id',
-        backref='books',
+        secondary='book_category',
         lazy='joined',
     )
 
 
 class CategoryRelation(Base):
     __tablename__ = 'category_relation'
-    __table_args__ = {'extend_existing': True}
+    # __table_args__ = {'extend_existing': True}
     
     id = Column(
         postgresql_types.INTEGER(),
@@ -643,19 +607,17 @@ class CategoryRelation(Base):
     )
     category1 = relationship(
         'Category',
-        primaryjoin='CategoryRelation.category1_id == Category.id',
-        backref='parents',
+        foreign_keys=[category1_id],
     )
     category2 = relationship(
         'Category',
-        primaryjoin='CategoryRelation.category2_id == Category.id',
-        backref='children',
+        foreign_keys=[category2_id],
     )
 
 
 class Category(Base):
     __tablename__ = 'category'
-    __table_args__ = {'extend_existing': True}
+    # __table_args__ = {'extend_existing': True}
     
     id = Column(
         postgresql_types.INTEGER(),
@@ -681,16 +643,14 @@ class Category(Base):
     )
     related_coming = relationship(
         'Category',
-        secondary='CategoryRelation',
-        primaryjoin='Category.id == CategoryRelation.category1_id',
-        secondaryjoin='CategoryRelation.category2_id == Category.id',
-        backref='related_going',
+        secondary='category_relation',
+        foreign_keys=[CategoryRelation.category1_id],
     )
 
 
 class Sales(Base):
     __tablename__ = 'sales'
-    __table_args__ = {'extend_existing': True}
+    # __table_args__ = {'extend_existing': True}
     
     id = Column(
         postgresql_types.BIGINT(),
@@ -731,8 +691,6 @@ class Sales(Base):
     )
     book = relationship(
         'Book',
-        primaryjoin='Sales.book_id == Book.id',
-        backref='sales',
     )
 
 
