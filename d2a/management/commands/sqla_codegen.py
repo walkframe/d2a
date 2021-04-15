@@ -123,9 +123,7 @@ def render_args(fields: dict, context: dict={}):
     kwargs = []
     for k, v in _extract_kwargs(fields).items():
         if isinstance(v, str):
-            v = f"'{v}'".format(**context)
-        elif k == "foreign_keys" and isinstance(v, list):
-            v = f"[{', '.join(v)}]"
+            v = f'"{v}"'.format(**context)
         elif inspect.isclass(v) and issubclass(v, TypeEngine):
             v = reverse_mapping[v]
         kwargs += [f"{k}={v}"]

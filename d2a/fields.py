@@ -284,6 +284,7 @@ mapping = {
                 '__back__': f.related_query_name().rstrip('+').lower(),
                 '__target__': f.related_model()._meta.db_table,
                 '__model__': f.related_model,
+                'foreign_keys': f"[{f.model._meta.db_table}.c.{f.column}]",
             },
             '__fk_kwargs__': {
                 'column': '{meta.db_table}.{meta.pk.attname}'.format(meta=f.related_model._meta),
@@ -299,8 +300,8 @@ mapping = {
                 '__back__': f.related_query_name().rstrip('+').lower(),
                 '__target__': f.related_model()._meta.db_table,
                 '__model__': f.model,
+                'foreign_keys': f"[{f.model._meta.db_table}.c.{f.column}]",
                 'uselist': False,
-                #'primaryjoin': f"{f.column} == {f.related_model._meta.object_name}.{f.foreign_related_fields[0].column}",
             },
             '__fk_kwargs__': {
                 'column': '{meta.db_table}.{meta.pk.attname}'.format(meta=f.related_model._meta),
@@ -318,10 +319,12 @@ mapping = {
                 '__back__': f.field.related_query_name().rstrip('+').lower(),
                 '__target__': f.rel.model._meta.db_table,
                 '__model__': f.field.related_model,
-                # 'foreign_keys': [f"{NAME_FORMATTER(f.rel.through._meta.object_name)}.{f.rel.field._m2m_column_cache}"],
                 'secondary': f.rel.through._meta.db_table,
-                #'primaryjoin': f"{f.rel.related_model._meta.object_name}.{f.rel.field.m2m_target_field_name()} == {NAME_FORMATTER(f.rel.through._meta.object_name)}.{f.rel.field._m2m_column_cache}",
-                #'secondaryjoin': f"{NAME_FORMATTER(f.rel.through._meta.object_name)}.{f.rel.field._m2m_reverse_column_cache} == {f.rel.model._meta.object_name}.{f.rel.field.m2m_reverse_target_field_name()}",
+                'foreign_keys': (
+                    f"[{f.rel.through._meta.db_table}.c.{f.rel.field._m2m_column_cache}]"
+                    if f.field.model == f.field.related_model else
+                    f"[{f.rel.through._meta.db_table}.c.{f.rel.field._m2m_column_cache}, {f.rel.through._meta.db_table}.c.{f.rel.field._m2m_reverse_column_cache}]"
+                )
             },
         } if not f.reverse else {}
     },

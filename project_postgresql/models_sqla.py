@@ -37,21 +37,21 @@ class ContentType(Base):
         unique=True,
         nullable=False,
         autoincrement=True,
-        doc='testtest',
+        doc="testtest",
     )
     app_label = Column(
         postgresql_types.VARCHAR(length=100),
         primary_key=False,
         unique=False,
         nullable=False,
-        doc='testtest',
+        doc="testtest",
     )
     model = Column(
         postgresql_types.VARCHAR(length=100),
         primary_key=False,
         unique=False,
         nullable=False,
-        doc='testtest',
+        doc="testtest",
     )
 
 
@@ -65,7 +65,7 @@ class LogEntry(Base):
         unique=True,
         nullable=False,
         autoincrement=True,
-        doc='testtest',
+        doc="testtest",
     )
     action_time = Column(
         postgresql_types.TIMESTAMP(),
@@ -73,59 +73,61 @@ class LogEntry(Base):
         primary_key=False,
         unique=False,
         nullable=False,
-        doc='testtest',
+        doc="testtest",
     )
     user_id = Column(
         postgresql_types.INTEGER(),
-        ForeignKey(column='auth_user.id', ondelete='CASCADE'),
+        ForeignKey(column="auth_user.id", ondelete="CASCADE"),
         primary_key=False,
         unique=False,
         nullable=False,
         autoincrement=True,
-        doc='testtest',
+        doc="testtest",
     )
     content_type_id = Column(
         postgresql_types.INTEGER(),
-        ForeignKey(column='django_content_type.id', ondelete='SET_NULL'),
+        ForeignKey(column="django_content_type.id", ondelete="SET_NULL"),
         primary_key=False,
         unique=False,
         nullable=True,
         autoincrement=True,
-        doc='testtest',
+        doc="testtest",
     )
     object_id = Column(
         postgresql_types.TEXT(),
         primary_key=False,
         unique=False,
         nullable=True,
-        doc='testtest',
+        doc="testtest",
     )
     object_repr = Column(
         postgresql_types.VARCHAR(length=200),
         primary_key=False,
         unique=False,
         nullable=False,
-        doc='testtest',
+        doc="testtest",
     )
     action_flag = Column(
         postgresql_types.SMALLINT(),
         primary_key=False,
         unique=False,
         nullable=False,
-        doc='testtest',
+        doc="testtest",
     )
     change_message = Column(
         postgresql_types.TEXT(),
         primary_key=False,
         unique=False,
         nullable=False,
-        doc='testtest',
+        doc="testtest",
     )
     user = relationship(
         'User',
+        foreign_keys="[django_admin_log.c.user_id]",
     )
     content_type = relationship(
         'ContentType',
+        foreign_keys="[django_admin_log.c.content_type_id]",
     )
 
 
@@ -139,31 +141,33 @@ class GroupPermissions(Base):
         unique=True,
         nullable=False,
         autoincrement=True,
-        doc='testtest',
+        doc="testtest",
     )
     group_id = Column(
         postgresql_types.INTEGER(),
-        ForeignKey(column='auth_group.id', ondelete='CASCADE'),
+        ForeignKey(column="auth_group.id", ondelete="CASCADE"),
         primary_key=False,
         unique=False,
         nullable=False,
         autoincrement=True,
-        doc='testtest',
+        doc="testtest",
     )
     permission_id = Column(
         postgresql_types.INTEGER(),
-        ForeignKey(column='auth_permission.id', ondelete='CASCADE'),
+        ForeignKey(column="auth_permission.id", ondelete="CASCADE"),
         primary_key=False,
         unique=False,
         nullable=False,
         autoincrement=True,
-        doc='testtest',
+        doc="testtest",
     )
     group = relationship(
         'Group',
+        foreign_keys="[auth_group_permissions.c.group_id]",
     )
     permission = relationship(
         'Permission',
+        foreign_keys="[auth_group_permissions.c.permission_id]",
     )
 
 
@@ -177,18 +181,19 @@ class Group(Base):
         unique=True,
         nullable=False,
         autoincrement=True,
-        doc='testtest',
+        doc="testtest",
     )
     name = Column(
         postgresql_types.VARCHAR(length=150),
         primary_key=False,
         unique=True,
         nullable=False,
-        doc='testtest',
+        doc="testtest",
     )
     permissions = relationship(
         'Permission',
-        secondary='auth_group_permissions',
+        secondary="auth_group_permissions",
+        foreign_keys="[auth_group_permissions.c.group_id, auth_group_permissions.c.permission_id]",
     )
 
 
@@ -202,33 +207,34 @@ class Permission(Base):
         unique=True,
         nullable=False,
         autoincrement=True,
-        doc='testtest',
+        doc="testtest",
     )
     name = Column(
         postgresql_types.VARCHAR(length=255),
         primary_key=False,
         unique=False,
         nullable=False,
-        doc='testtest',
+        doc="testtest",
     )
     content_type_id = Column(
         postgresql_types.INTEGER(),
-        ForeignKey(column='django_content_type.id', ondelete='CASCADE'),
+        ForeignKey(column="django_content_type.id", ondelete="CASCADE"),
         primary_key=False,
         unique=False,
         nullable=False,
         autoincrement=True,
-        doc='testtest',
+        doc="testtest",
     )
     codename = Column(
         postgresql_types.VARCHAR(length=100),
         primary_key=False,
         unique=False,
         nullable=False,
-        doc='testtest',
+        doc="testtest",
     )
     content_type = relationship(
         'ContentType',
+        foreign_keys="[auth_permission.c.content_type_id]",
     )
 
 
@@ -242,31 +248,33 @@ class UserGroups(Base):
         unique=True,
         nullable=False,
         autoincrement=True,
-        doc='testtest',
+        doc="testtest",
     )
     user_id = Column(
         postgresql_types.INTEGER(),
-        ForeignKey(column='auth_user.id', ondelete='CASCADE'),
+        ForeignKey(column="auth_user.id", ondelete="CASCADE"),
         primary_key=False,
         unique=False,
         nullable=False,
         autoincrement=True,
-        doc='testtest',
+        doc="testtest",
     )
     group_id = Column(
         postgresql_types.INTEGER(),
-        ForeignKey(column='auth_group.id', ondelete='CASCADE'),
+        ForeignKey(column="auth_group.id", ondelete="CASCADE"),
         primary_key=False,
         unique=False,
         nullable=False,
         autoincrement=True,
-        doc='testtest',
+        doc="testtest",
     )
     user = relationship(
         'User',
+        foreign_keys="[auth_user_groups.c.user_id]",
     )
     group = relationship(
         'Group',
+        foreign_keys="[auth_user_groups.c.group_id]",
     )
 
 
@@ -280,31 +288,33 @@ class UserUserPermissions(Base):
         unique=True,
         nullable=False,
         autoincrement=True,
-        doc='testtest',
+        doc="testtest",
     )
     user_id = Column(
         postgresql_types.INTEGER(),
-        ForeignKey(column='auth_user.id', ondelete='CASCADE'),
+        ForeignKey(column="auth_user.id", ondelete="CASCADE"),
         primary_key=False,
         unique=False,
         nullable=False,
         autoincrement=True,
-        doc='testtest',
+        doc="testtest",
     )
     permission_id = Column(
         postgresql_types.INTEGER(),
-        ForeignKey(column='auth_permission.id', ondelete='CASCADE'),
+        ForeignKey(column="auth_permission.id", ondelete="CASCADE"),
         primary_key=False,
         unique=False,
         nullable=False,
         autoincrement=True,
-        doc='testtest',
+        doc="testtest",
     )
     user = relationship(
         'User',
+        foreign_keys="[auth_user_user_permissions.c.user_id]",
     )
     permission = relationship(
         'Permission',
+        foreign_keys="[auth_user_user_permissions.c.permission_id]",
     )
 
 
@@ -318,21 +328,21 @@ class User(Base):
         unique=True,
         nullable=False,
         autoincrement=True,
-        doc='testtest',
+        doc="testtest",
     )
     password = Column(
         postgresql_types.VARCHAR(length=128),
         primary_key=False,
         unique=False,
         nullable=False,
-        doc='testtest',
+        doc="testtest",
     )
     last_login = Column(
         postgresql_types.TIMESTAMP(),
         primary_key=False,
         unique=False,
         nullable=True,
-        doc='testtest',
+        doc="testtest",
     )
     is_superuser = Column(
         mysql_types.BOOLEAN(),
@@ -340,35 +350,35 @@ class User(Base):
         primary_key=False,
         unique=False,
         nullable=False,
-        doc='testtest',
+        doc="testtest",
     )
     username = Column(
         postgresql_types.VARCHAR(length=150),
         primary_key=False,
         unique=True,
         nullable=False,
-        doc='testtest',
+        doc="testtest",
     )
     first_name = Column(
         postgresql_types.VARCHAR(length=150),
         primary_key=False,
         unique=False,
         nullable=False,
-        doc='testtest',
+        doc="testtest",
     )
     last_name = Column(
         postgresql_types.VARCHAR(length=150),
         primary_key=False,
         unique=False,
         nullable=False,
-        doc='testtest',
+        doc="testtest",
     )
     email = Column(
         postgresql_types.VARCHAR(length=254),
         primary_key=False,
         unique=False,
         nullable=False,
-        doc='testtest',
+        doc="testtest",
     )
     is_staff = Column(
         mysql_types.BOOLEAN(),
@@ -376,14 +386,14 @@ class User(Base):
         primary_key=False,
         unique=False,
         nullable=False,
-        doc='testtest',
+        doc="testtest",
     )
     is_active = Column(
         mysql_types.BOOLEAN(),
         primary_key=False,
         unique=False,
         nullable=False,
-        doc='testtest',
+        doc="testtest",
     )
     date_joined = Column(
         postgresql_types.TIMESTAMP(),
@@ -391,15 +401,17 @@ class User(Base):
         primary_key=False,
         unique=False,
         nullable=False,
-        doc='testtest',
+        doc="testtest",
     )
     groups = relationship(
         'Group',
-        secondary='auth_user_groups',
+        secondary="auth_user_groups",
+        foreign_keys="[auth_user_groups.c.user_id, auth_user_groups.c.group_id]",
     )
     user_permissions = relationship(
         'Permission',
-        secondary='auth_user_user_permissions',
+        secondary="auth_user_user_permissions",
+        foreign_keys="[auth_user_user_permissions.c.user_id, auth_user_user_permissions.c.permission_id]",
     )
 
 
@@ -412,21 +424,21 @@ class Session(Base):
         primary_key=True,
         unique=True,
         nullable=False,
-        doc='testtest',
+        doc="testtest",
     )
     session_data = Column(
         postgresql_types.TEXT(),
         primary_key=False,
         unique=False,
         nullable=False,
-        doc='testtest',
+        doc="testtest",
     )
     expire_date = Column(
         postgresql_types.TIMESTAMP(),
         primary_key=False,
         unique=False,
         nullable=False,
-        doc='testtest',
+        doc="testtest",
     )
 
 
@@ -440,28 +452,28 @@ class Author(Base):
         unique=True,
         nullable=False,
         autoincrement=True,
-        doc='testtest',
+        doc="testtest",
     )
     name = Column(
         postgresql_types.VARCHAR(length=255),
         primary_key=False,
         unique=False,
         nullable=False,
-        doc='testtest',
+        doc="testtest",
     )
     age = Column(
         postgresql_types.SMALLINT(),
         primary_key=False,
         unique=False,
         nullable=False,
-        doc='testtest',
+        doc="testtest",
     )
     email = Column(
         postgresql_types.VARCHAR(length=254),
         primary_key=False,
         unique=False,
         nullable=True,
-        doc='testtest',
+        doc="testtest",
     )
 
 
@@ -475,30 +487,32 @@ class BookCategory(Base):
         unique=True,
         nullable=False,
         autoincrement=True,
-        doc='testtest',
+        doc="testtest",
     )
     book_id = Column(
         postgresql_types.UUID(),
-        ForeignKey(column='book.id', ondelete='CASCADE'),
+        ForeignKey(column="book.id", ondelete="CASCADE"),
         primary_key=False,
         unique=False,
         nullable=False,
-        doc='testtest',
+        doc="testtest",
     )
     category_id = Column(
         postgresql_types.INTEGER(),
-        ForeignKey(column='category.id', ondelete='CASCADE'),
+        ForeignKey(column="category.id", ondelete="CASCADE"),
         primary_key=False,
         unique=False,
         nullable=False,
         autoincrement=True,
-        doc='testtest',
+        doc="testtest",
     )
     book = relationship(
         'Book',
+        foreign_keys="[book_category.c.book_id]",
     )
     category = relationship(
         'Category',
+        foreign_keys="[book_category.c.category_id]",
     )
 
 
@@ -512,59 +526,61 @@ class Book(Base):
         primary_key=True,
         unique=True,
         nullable=False,
-        doc='testtest',
+        doc="testtest",
     )
     price = Column(
         postgresql_types.JSONB(),
         primary_key=False,
         unique=False,
         nullable=False,
-        doc='testtest',
+        doc="testtest",
     )
     title = Column(
         default_types.VARCHAR(length=255),
         primary_key=False,
         unique=False,
         nullable=False,
-        doc='testtest',
+        doc="testtest",
     )
     description = Column(
         postgresql_types.TEXT(),
         primary_key=False,
         unique=False,
         nullable=True,
-        doc='testtest',
+        doc="testtest",
     )
     author_id = Column(
         postgresql_types.INTEGER(),
-        ForeignKey(column='author.id', ondelete='SET_NULL'),
+        ForeignKey(column="author.id", ondelete="SET_NULL"),
         primary_key=False,
         unique=False,
         nullable=True,
         autoincrement=True,
-        doc='testtest',
+        doc="testtest",
     )
     content = Column(
         postgresql_types.BYTEA(),
         primary_key=False,
         unique=False,
         nullable=False,
-        doc='testtest',
+        doc="testtest",
     )
     tags = Column(
         postgresql_types.ARRAY(item_type=postgresql_types.VARCHAR),
         primary_key=False,
         unique=False,
         nullable=False,
-        doc='testtest',
+        doc="testtest",
     )
     author = relationship(
         'Author',
+        foreign_keys="[book.c.author_id]",
     )
     category = relationship(
         'Category',
-        secondary='book_category',
-        lazy='joined',
+        secondary="book_category",
+        foreign_keys="[book_category.c.book_id, book_category.c.category_id]",
+        lazy="joined",
     )
 
 
@@ -578,40 +594,40 @@ class CategoryRelation(Base):
         unique=True,
         nullable=False,
         autoincrement=True,
-        doc='testtest',
+        doc="testtest",
     )
     category1_id = Column(
         postgresql_types.INTEGER(),
-        ForeignKey(column='category.id', ondelete='CASCADE'),
+        ForeignKey(column="category.id", ondelete="CASCADE"),
         primary_key=False,
         unique=False,
         nullable=False,
         autoincrement=True,
-        doc='testtest',
+        doc="testtest",
     )
     category2_id = Column(
         postgresql_types.INTEGER(),
-        ForeignKey(column='category.id', ondelete='CASCADE'),
+        ForeignKey(column="category.id", ondelete="CASCADE"),
         primary_key=False,
         unique=False,
         nullable=False,
         autoincrement=True,
-        doc='testtest',
+        doc="testtest",
     )
     type = Column(
         postgresql_types.VARCHAR(length=30),
         primary_key=False,
         unique=False,
         nullable=True,
-        doc='testtest',
+        doc="testtest",
     )
     category1 = relationship(
         'Category',
-        foreign_keys=[category1_id],
+        foreign_keys="[category_relation.c.category1_id]",
     )
     category2 = relationship(
         'Category',
-        foreign_keys=[category2_id],
+        foreign_keys="[category_relation.c.category2_id]",
     )
 
 
@@ -625,26 +641,26 @@ class Category(Base):
         unique=True,
         nullable=False,
         autoincrement=True,
-        doc='testtest',
+        doc="testtest",
     )
     name = Column(
         original_types.CIText(),
         primary_key=False,
         unique=False,
         nullable=False,
-        doc='testtest',
+        doc="testtest",
     )
     created = Column(
         postgresql_types.TIMESTAMP(),
         primary_key=False,
         unique=False,
         nullable=False,
-        doc='testtest',
+        doc="testtest",
     )
     related_coming = relationship(
         'Category',
-        secondary='category_relation',
-        foreign_keys=[CategoryRelation.category1_id],
+        secondary="category_relation",
+        foreign_keys="[category_relation.c.category1_id]",
     )
 
 
@@ -658,39 +674,40 @@ class Sales(Base):
         unique=True,
         nullable=False,
         autoincrement=True,
-        doc='testtest',
+        doc="testtest",
     )
     book_id = Column(
         postgresql_types.UUID(),
-        ForeignKey(column='book.id', ondelete='CASCADE'),
+        ForeignKey(column="book.id", ondelete="CASCADE"),
         primary_key=False,
         unique=False,
         nullable=False,
-        doc='testtest',
+        doc="testtest",
     )
     sold = Column(
         postgresql_types.TIMESTAMP(),
         primary_key=False,
         unique=False,
         nullable=False,
-        doc='testtest',
+        doc="testtest",
     )
     reservation = Column(
         postgresql_types.INTERVAL(),
         primary_key=False,
         unique=False,
         nullable=True,
-        doc='testtest',
+        doc="testtest",
     )
     source = Column(
         postgresql_types.INET(),
         primary_key=False,
         unique=False,
         nullable=True,
-        doc='testtest',
+        doc="testtest",
     )
     book = relationship(
         'Book',
+        foreign_keys="[sales.c.book_id]",
     )
 
 
