@@ -400,14 +400,21 @@ except AttributeError:
     pass
 
 try:
+    def _parse_array(field, db_type):
+        dimensions = 1
+        while isinstance(field, postgres_fields.ArrayField):
+            field = field.base_field
+            dimensions += 1
+        return {"item_type": mapping[type(field)].get(f"__{db_type}_type__"), "dimensions": dimensions}
+
     mapping[postgres_fields.ArrayField] = {
         '__default_type__': postgresql_types.ARRAY,
         '__postgresql_type__': postgresql_types.ARRAY,
         '__mysql_type__': default_types.ARRAY,
         '__oracle_type__': default_types.ARRAY,
         '__callback__': lambda f: {
-            '__default_type_kwargs__': {'item_type': mapping[type(f.base_field)]['__default_type__']},
-            '__postgresql_type_kwargs__': {'item_type': mapping[type(f.base_field)].get('__postgresql_type__') or mapping[type(f.base_field)]['__default_type__']},
+            '__default_type_kwargs__': _parse_array(f.base_field, "default"),
+            '__postgresql_type_kwargs__': _parse_array(f.base_field, "postgresql"),
         },
     }
 except AttributeError:

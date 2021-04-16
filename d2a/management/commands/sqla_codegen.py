@@ -46,8 +46,6 @@ class Command(BaseCommand):
             for i in range(1, len(mods) + 1):
                 mod = '.'.join(mods[:i])
                 d = f'{mod}.models'
-                if importlib.util.find_spec(d) is None:
-                    continue
                 try:
                     django_models = importlib.import_module(d)
                     for model in parse_models(django_models).values():
@@ -124,15 +122,15 @@ def build_context(django_model, models, db_type):
     models[model_name] = model_context
 
 
-def render_args(fields: dict, context: dict={}):
-    kwargs = []
-    for k, v in _extract_kwargs(fields).items():
+def render_args(kwargs: dict, context: dict={}):
+    args = []
+    for k, v in _extract_kwargs(kwargs).items():
         if isinstance(v, str):
             v = f'"{v}"'.format(**context)
         elif inspect.isclass(v) and issubclass(v, TypeEngine):
             v = reverse_mapping[v]
-        kwargs += [f"{k}={v}"]
-    return kwargs
+        args += [f"{k}={v}"]
+    return args
 
 
 TEMPLATE = """\
