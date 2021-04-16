@@ -40,7 +40,7 @@ def parse_field(field):
     try:
         conf = mapping[field_type]
     except KeyError as e:
-        alt = fallback(field_type, e)
+        alt = fallback(field, e)
         conf = mapping.get(alt, {})
     
     info.update(conf)
