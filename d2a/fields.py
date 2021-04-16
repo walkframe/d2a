@@ -325,7 +325,8 @@ mapping = {
                     f"[{f.rel.through._meta.db_table}.c.{f.rel.field._m2m_column_cache}]"
                     if f.field.model == f.field.related_model else
                     f"[{f.rel.through._meta.db_table}.c.{f.rel.field._m2m_column_cache}, {f.rel.through._meta.db_table}.c.{f.rel.field._m2m_reverse_column_cache}]"
-                )
+                ),
+                'remote_side': f"[{f.field.model._meta.db_table}.c.{f.rel.target_field.column}]" if f.field.model == f.field.related_model else None,
             },
         } if not f.reverse else {}
     },

@@ -5,9 +5,9 @@ from books.fields import CustomEmailField
 
 D2A_CONFIG = {
     "REL_PARAMS": {
-        #"*": {
-        #    "backref": "{__back__}",
-        #},
+        "*": {
+            "backref": "{__back__}",
+        },
         "Book.category": {
             "lazy": "joined",
         },
