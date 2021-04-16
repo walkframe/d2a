@@ -4,6 +4,7 @@ import warnings
 from django.db import models
 from django.conf import settings
 from django.contrib.postgres import fields as postgres_fields
+from django.core.exceptions import ImproperlyConfigured
 
 from sqlalchemy import types as default_types
 from sqlalchemy.dialects import (
@@ -526,6 +527,6 @@ try:
     from .geoalchemy2 import geo_mapping
     mapping.update(geo_mapping)
 
-except (ImportError, AttributeError) as e:
+except (ImportError, AttributeError, ImproperlyConfigured) as e:
     if D2A_CONFIG.get('USE_GEOALCHEMY2', False):
         warnings.warn('An error occured: {}. HINT: GeoAlchemy2 should be installed when you use GeoDjango.'.format(e))
