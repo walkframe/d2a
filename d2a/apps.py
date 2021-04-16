@@ -9,7 +9,7 @@ class D2aConfig(AppConfig):
 
     def ready(self):
         import d2a
-        if d2a.D2A_CONFIG.get("AUTOLOAD") is False:
+        if d2a.D2A_CONFIG.get("AUTOLOAD") in (False, None):
             return
 
         t = threading.Thread(target=d2a.autoload)
