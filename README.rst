@@ -31,12 +31,7 @@ Installation
 
   $ pip install d2a
 
-Usage
-=====
-
-Auto loading
-------------
-Just add `d2a` to ``settings.INSTALLED_APPS``.
+Add `d2a` to ``settings.INSTALLED_APPS``.
 
 .. code-block:: python
 
@@ -56,12 +51,34 @@ Just add `d2a` to ``settings.INSTALLED_APPS``.
       'sales',
   ]
 
+
+Usage
+=====
+Code generation
+----------------------------------------------
+
+.. code:: shell
+
+  $ python manage.py sqla_codegen
+
+`Config example <https://github.com/walkframe/d2a/blob/master/project_postgresql/settings/codegen.py>`__
+
+`Output example <https://github.com/walkframe/d2a/blob/master/project_postgresql/models_sqla_example.py>`__
+
 .. warning::
 
-  Put it before apps you made as you can.
-  Because it expects to register alchemy model before the other ``apps.py``.
+  Do not use with AUTOLOAD.
 
-Then `models_sqla` (default) in all apps will be imported as a module.
+
+Auto loading [deprecated]
+----------------------------------------------
+
+AUTOLOAD will be enabled when ``D2A_CONFIG["AUTOLOAD"]`` is specified.
+
+`Config example <https://github.com/walkframe/d2a/blob/master/project_mysql/settings/base.py#L136-L141>`__
+
+
+`models_sqla` (default) will be made as a module in all apps.
 
 .. code:: python
 
@@ -423,6 +440,13 @@ Links
 
 History
 =======
+:3.0.x:
+
+  - Code generation debut.
+  - AUTOLOAD got deprecated.
+
+    - When you do not specify ``"AUTOLOAD"`` in your``settings.D2A_CONFIG``, AUTOLOAD get disabled.
+
 :2.8.x:
 
   - 2021-03-19

@@ -5,12 +5,12 @@ import sqlalchemy as sa
 class TestGeoAlchemyFieldType(object):
     @pytest.fixture
     def LakeTable(self):
-        from places.models_sqla import Lake
+        from models_sqla import Lake
         return Lake.__table__
 
     @pytest.fixture
     def AddressTable(self):
-        from places.models_sqla import Address
+        from models_sqla import Address
         return Address.__table__
 
     def test_LakeTable(self, LakeTable):

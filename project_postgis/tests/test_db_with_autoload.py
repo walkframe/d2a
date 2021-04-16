@@ -17,7 +17,7 @@ def srid():
 
 @pytest.fixture(scope='function')
 def LakeModel():
-    from models_sqla import Lake
+    from places.models_sqla import Lake
     return Lake
 
 

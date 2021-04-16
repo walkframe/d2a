@@ -13,7 +13,8 @@ from sqlalchemy.dialects import (
 )
 
 from .compat import M2MField
-from .original_types import CIText
+from . import original_types
+from .utils import get_camelcase
 
 """
 Mapping definition
@@ -54,6 +55,7 @@ def alias_dict(extra_mapping={}):
 
 
 D2A_CONFIG = getattr(settings, 'D2A_CONFIG', {})
+NAME_FORMATTER = D2A_CONFIG.get('NAME_FORMATTER', lambda name: get_camelcase(name, capitalize=True))
 
 mapping = {
     models.AutoField: {
@@ -274,21 +276,15 @@ mapping = {
         '__oracle_type__': oracle_types.NUMBER,
         '__oracle_type_kwargs__': {'precision': 1},
     },
-    models.NullBooleanField: {
-        '__default_type__': default_types.BOOLEAN,
-        '__postgresql_type__': postgresql_types.BOOLEAN,
-        '__mysql_type__': mysql_types.BOOLEAN,
-        '__oracle_type__': oracle_types.NUMBER,
-        '__oracle_type_kwargs__': {'precision': 1},
-        'nullable': True,
-    },
     models.ForeignKey: {
         '__callback__': lambda f: {
             '__callback__': lambda f: (mapping[type(f.target_field)], f.target_field),
             '__rel_kwargs__': {
                 '__logical_name__': f.name,
-                '__back__': f.related_query_name(),
+                '__back__': f.related_query_name().rstrip('+').lower(),
                 '__target__': f.related_model()._meta.db_table,
+                '__model__': f.related_model,
+                'foreign_keys': f"[{f.model._meta.db_table}.c.{f.column}]",
             },
             '__fk_kwargs__': {
                 'column': '{meta.db_table}.{meta.pk.attname}'.format(meta=f.related_model._meta),
@@ -301,8 +297,10 @@ mapping = {
             '__callback__': lambda f: (mapping[type(f.target_field)], f.target_field),
             '__rel_kwargs__': {
                 '__logical_name__': f.name,
-                '__back__': f.related_query_name(),
+                '__back__': f.related_query_name().rstrip('+').lower(),
                 '__target__': f.related_model()._meta.db_table,
+                '__model__': f.model,
+                'foreign_keys': f"[{f.model._meta.db_table}.c.{f.column}]",
                 'uselist': False,
             },
             '__fk_kwargs__': {
@@ -318,12 +316,32 @@ mapping = {
                 '__target_field__': f.field.m2m_target_field_name(),
                 '__remote_primary_field__': f.field.m2m_column_name(),
                 '__remote_secondary_field__': f.field.m2m_reverse_name(),
-                '__back__': f.field.related_query_name(),
+                '__back__': f.field.related_query_name().rstrip('+').lower(),
                 '__target__': f.rel.model._meta.db_table,
+                '__model__': f.field.related_model,
+                'secondary': f.rel.through._meta.db_table,
+                'foreign_keys': (
+                    f"[{f.rel.through._meta.db_table}.c.{f.rel.field._m2m_column_cache}]"
+                    if f.field.model == f.field.related_model else
+                    f"[{f.rel.through._meta.db_table}.c.{f.rel.field._m2m_column_cache}, {f.rel.through._meta.db_table}.c.{f.rel.field._m2m_reverse_column_cache}]"
+                )
             },
         } if not f.reverse else {}
     },
 }
+
+try:
+    # Deprecated since version 3.1
+    mapping[models.NullBooleanField] = {
+        '__default_type__': default_types.BOOLEAN,
+        '__postgresql_type__': postgresql_types.BOOLEAN,
+        '__mysql_type__': mysql_types.BOOLEAN,
+        '__oracle_type__': oracle_types.NUMBER,
+        '__oracle_type_kwargs__': {'precision': 1},
+        'nullable': True,
+    }
+except AttributeError:
+    pass
 
 try:
     # deprecated
@@ -341,7 +359,6 @@ try:
     }
 except AttributeError:
     pass
-
 
 try:
     mapping[models.PositiveBigIntegerField] = {
@@ -415,6 +432,15 @@ JSONType, JSONRule = 'JSONType', {
 mapping[JSONType] = JSONRule
 
 try:
+    mapping[models.JSONField] = {
+        **JSONRule,
+        '__postgresql_type__': postgresql_types.JSONB,
+        '__oracle_type__': oracle_types.NCLOB,
+    }
+except AttributeError:
+    pass
+
+try:
     mapping[postgres_fields.JSONField] = {
         **JSONRule,
         '__default_type__': postgresql_types.JSONB,
@@ -425,24 +451,24 @@ except AttributeError:
 
 try:
     mapping[postgres_fields.CICharField] = {
-        '__default_type__': CIText,
-        '__postgresql_type__': CIText,
+        '__default_type__': original_types.CIText,
+        '__postgresql_type__': original_types.CIText,
     }
 except AttributeError:
     pass
 
 try:
     mapping[postgres_fields.CIEmailField] = {
-        '__default_type__': CIText,
-        '__postgresql_type__': CIText,
+        '__default_type__': original_types.CIText,
+        '__postgresql_type__': original_types.CIText,
     }
 except AttributeError:
     pass
 
 try:
-    mapping[postgres_fields.CITextField] = {
-        '__default_type__': CIText,
-        '__postgresql_type__': CIText,
+    mapping[postgres_fields.original_types.CITextField] = {
+        '__default_type__': original_types.CIText,
+        '__postgresql_type__': original_types.CIText,
     }
 except AttributeError:
     pass
