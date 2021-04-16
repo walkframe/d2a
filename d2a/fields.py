@@ -300,7 +300,7 @@ mapping = {
                 '__logical_name__': f.name,
                 '__back__': f.related_query_name().rstrip('+').lower(),
                 '__target__': f.related_model()._meta.db_table,
-                '__model__': f.model,
+                '__model__': f.related_model,
                 'foreign_keys': f"[{f.model._meta.db_table}.c.{f.column}]",
                 'uselist': False,
             },
