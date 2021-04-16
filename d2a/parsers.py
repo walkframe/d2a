@@ -55,7 +55,8 @@ def parse_field(field):
 def parse_model(model, callback=parse_field):
     info = {'table_name': model._meta.db_table, 'fields': OrderedDict()}
     for field in model._meta.fields:
-        info['fields'][field.attname] = callback(field)
+        info['fields'][field.column] = callback(field)
+        info['fields'][field.column]["__logical_name__"] = field.name
 
     for name, field in get_m2m_fields(model).items():
         try:

@@ -63,6 +63,8 @@ Code generation
 
 `Config example <https://github.com/walkframe/d2a/blob/master/project_postgresql/settings/codegen.py>`__
 
+`Output example <https://github.com/walkframe/d2a/blob/master/project_postgresql/models_sqla_example.py>`__
+
 .. warning::
 
   Do not use with AUTOLOAD.
