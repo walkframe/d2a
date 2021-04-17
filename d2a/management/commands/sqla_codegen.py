@@ -55,7 +55,7 @@ class Command(BaseCommand):
                     pass
         
         if options.get("template_path"):
-            t = get_template(options["template_path"])
+            t = get_template(options["template_path"]).template
         else:
             t = Template(TEMPLATE)
         with open(options["path"], "w") as f:
