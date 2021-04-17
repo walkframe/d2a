@@ -301,7 +301,7 @@ mapping = {
             '__callback__': lambda f: (mapping[type(f.target_field)], f.target_field),
             '__rel_kwargs__': {
                 '__logical_name__': f.name,
-                '__back__': f.related_query_name.rstrip('+').lower(),
+                '__back__': f.related_query_name().rstrip('+').lower(),
                 '__back_target__': f.model._meta.db_table,
                 '__target__': f.related_model._meta.db_table,
                 '__model__': f.model,
