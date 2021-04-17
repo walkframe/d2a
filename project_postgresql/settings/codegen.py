@@ -21,7 +21,8 @@ D2A_CONFIG = {
         },
     },
     "TYPE_PARAMS": {
-        "*": {
+        "Book.title": {
+            "collation": "utf8",
         },
     },
     "TYPES": {
