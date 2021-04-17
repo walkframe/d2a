@@ -15,7 +15,6 @@ from sqlalchemy.dialects import (
 
 from .compat import M2MField
 from . import original_types
-from .utils import get_camelcase
 
 """
 Mapping definition
@@ -56,7 +55,6 @@ def alias_dict(extra_mapping={}):
 
 
 D2A_CONFIG = getattr(settings, 'D2A_CONFIG', {})
-NAME_FORMATTER = D2A_CONFIG.get('NAME_FORMATTER', lambda name: get_camelcase(name, capitalize=True))
 
 mapping = {
     models.AutoField: {

@@ -12,18 +12,20 @@ from sqlalchemy.orm import relationship
 
 from .parsers import parse_models, parse_model
 
-from .fields import alias, alias_dict, JSONType, NAME_FORMATTER
+from .fields import alias, alias_dict, JSONType
 from .db import (
     AUTO_DETECTED_DB_TYPE,
     query_expression, execute_expression,
     make_engine, make_session,
 )
+from .utils import get_camelcase
 
 DB_TYPES = ['postgresql', 'mysql', 'oracle', 'sqlite3', 'firebird', 'mssql', 'default']
 
 
 D2A_CONFIG = getattr(settings, 'D2A_CONFIG', {})
 alias_dict(D2A_CONFIG.get('ALIASES', {}))
+NAME_FORMATTER = D2A_CONFIG.get('NAME_FORMATTER', lambda name: get_camelcase(name, capitalize=True))
 
 Base = declarative_base()
 existing = {}

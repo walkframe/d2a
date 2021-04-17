@@ -16,6 +16,9 @@ D2A_CONFIG = {
         "*": {
             "doc": "testtest",
         },
+        "Book.title": {
+            "server_default": "val",
+        },
     },
     "TYPE_PARAMS": {
         "*": {
