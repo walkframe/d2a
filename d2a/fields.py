@@ -286,7 +286,7 @@ mapping = {
                 '__target__': f.related_model()._meta.db_table,
                 '__model__': f.related_model,
                 'foreign_keys': f"[{f.model._meta.db_table}.c.{f.column}]",
-                'remote_side': f"[{f.field.model._meta.db_table}.c.{f.field.target_field.column}]" if f.field.model == f.field.related_model else None,
+                'remote_side': f"[{f.model._meta.db_table}.c.{f.target_field.column}]" if f.model == f.related_model else None,
             },
             '__fk_kwargs__': {
                 'column': '{meta.db_table}.{meta.pk.attname}'.format(meta=f.related_model._meta),
@@ -303,7 +303,7 @@ mapping = {
                 '__target__': f.related_model()._meta.db_table,
                 '__model__': f.related_model,
                 'foreign_keys': f"[{f.model._meta.db_table}.c.{f.column}]",
-                'remote_side': f"[{f.field.model._meta.db_table}.c.{f.field.target_field.column}]" if f.field.model == f.field.related_model else None,
+                'remote_side': f"[{f.model._meta.db_table}.c.{f.target_field.column}]" if f.model == f.related_model else None,
                 'uselist': False,
             },
             '__fk_kwargs__': {
