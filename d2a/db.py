@@ -125,7 +125,7 @@ def query_expression(stmt, conn=None, dialect=None, database='default',
         'sql_keyword_case': 'upper', # A rule converting reserved words.
         'explain_prefix': depends on the database type. unless you specify it, it is automatically used the following:
           %(prefix)s
-        'printer': logger.debug, # printing method, if you use python3, then try to use `print` function.
+        'printer': printer, # printing method. Try to use `logger.info` function for example.
         'delimiter': '=' * 100, # characters dividing debug informations.
         'database': 'default' # django database
       }
@@ -159,7 +159,7 @@ def execute_expression(stmt, conn=None, dialect=None, database='default', debug=
 
 
 def show_debug(cursor, sql, params, options={}):
-    printer = options.get('printer', logger.debug)
+    printer = options.get('printer', print)
     delimiter = options.get('delimiter', '=' * 100 + '\n')
     database = _detect_db_type(options.get('database', 'default'))
     if options.get('show_sql', True):
