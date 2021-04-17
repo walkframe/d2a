@@ -113,7 +113,7 @@ def build_context(django_model, models, db_type):
         
         rel_kwargs_extended = {**REL_PARAMS.get("*", {}), **REL_PARAMS.get(f"{model_name}.{name}", {})}
         model_context["relationships"][name] = [
-            f"'{rel_kwargs['__model__']._meta.object_name}'",
+            f"'{rel_kwargs['__related_model__']._meta.object_name}'",
             *render_args({**rel_kwargs, **rel_kwargs_extended}, rel_kwargs),
         ]
         if '__secondary_model__' in rel_kwargs:
