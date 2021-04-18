@@ -6,20 +6,13 @@ TEMPLATE = """\
 from importlib import import_module
 
 import sqlalchemy as sa
-from sqlalchemy import (
-    types as default_types,
-    Column,
-    ForeignKey,
-)
-from sqlalchemy.ext.declarative import declarative_base
-from sqlalchemy.orm import relationship
+from sqlalchemy import types as default_types
 from sqlalchemy.dialects import (
     postgresql as postgresql_types,
     mysql as mysql_types,
     oracle as oracle_types,
 )
-from django.utils import timezone
-from d2a import original_types
+from sqlalchemy.ext.declarative import declarative_base
 try:
     from geoalchemy2 import types as geotypes
 except ImportError:
@@ -28,6 +21,11 @@ except ImportError:
 {{ blocks.after_importing }}
 
 Base = declarative_base()
+
+
+class CIText(default_types.String):
+    '''DO NOT DELETE THIS CLASS'''
+    __visit_name__ = 'CITEXT'
 
 
 def GET_DEFAULT(path):
@@ -52,10 +50,10 @@ def GET_DEFAULT(path):
 class {{ model.model_name }}(Base):
     __tablename__ = '{{ model.table_name }}'
     {% for name, args in model.columns.items %}
-    {{ name }} = Column({% for arg in args %}
+    {{ name }} = sa.Column({% for arg in args %}
         {{ arg | safe }},{% endfor %}
     ){% endfor %}{% for name, args in model.relationships.items %}
-    {{ name }} = relationship({% for arg in args %}
+    {{ name }} = sa.orm.relationship({% for arg in args %}
         {{ arg | safe }},{% endfor %}
     ){% endfor %}
 

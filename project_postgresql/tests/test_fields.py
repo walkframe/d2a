@@ -1,8 +1,6 @@
 import pytest
 import sqlalchemy as sa
 
-from d2a.original_types import CIText
-
 
 def info(table):
     result = {}
@@ -100,7 +98,7 @@ class TestPostgreSQL(object):
             'name': {
                 'primary_key': False,
                 'unique': False,
-                'type': CIText,
+                'type': models_sqla.CIText,
                 'nullable': False,
             },
             'created': {

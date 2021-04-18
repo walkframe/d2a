@@ -97,7 +97,7 @@ def build_context(django_model, models, db_type):
         model_context["columns"][name] = [f"{field_type}({', '.join(type_args)})"]
         if '__fk_kwargs__' in kwargs:
             fk_args = render_args(kwargs['__fk_kwargs__'])
-            model_context["columns"][name] += [f"ForeignKey({', '.join(fk_args)})"]
+            model_context["columns"][name] += [f"sa.ForeignKey({', '.join(fk_args)})"]
         
         kwargs_extended = {**COL_PARAMS.get("*", {}), **COL_PARAMS.get(f"{model_name}.{name}", {})}
         if "default" in kwargs:

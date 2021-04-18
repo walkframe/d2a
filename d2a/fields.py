@@ -14,7 +14,7 @@ from sqlalchemy.dialects import (
 )
 
 from .compat import M2MField
-from . import original_types
+from .original_types import CIText
 
 """
 Mapping definition
@@ -466,24 +466,24 @@ except AttributeError:
 
 try:
     mapping[postgres_fields.CICharField] = {
-        '__default_type__': original_types.CIText,
-        '__postgresql_type__': original_types.CIText,
+        '__default_type__': CIText,
+        '__postgresql_type__': CIText,
     }
 except AttributeError:
     pass
 
 try:
     mapping[postgres_fields.CIEmailField] = {
-        '__default_type__': original_types.CIText,
-        '__postgresql_type__': original_types.CIText,
+        '__default_type__': CIText,
+        '__postgresql_type__': CIText,
     }
 except AttributeError:
     pass
 
 try:
-    mapping[postgres_fields.original_types.CITextField] = {
-        '__default_type__': original_types.CIText,
-        '__postgresql_type__': original_types.CIText,
+    mapping[postgres_fields.CITextField] = {
+        '__default_type__': CIText,
+        '__postgresql_type__': CIText,
     }
 except AttributeError:
     pass

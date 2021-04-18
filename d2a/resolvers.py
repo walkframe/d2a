@@ -4,7 +4,7 @@ from sqlalchemy.dialects import (
     mysql as mysql_types,
     oracle as oracle_types,
 )
-from . import original_types
+from .original_types import CIText
 
 try:
     from geoalchemy2 import types as geotypes
@@ -83,7 +83,7 @@ alchemy_fields = [
     "geotypes.Geometry",
     "geotypes.Raster",
 
-    "original_types.CIText",
+    "CIText",
 ]
 
 forward_mapping = {}
