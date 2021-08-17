@@ -1,4 +1,3 @@
-[![FOSSA Status](https://app.fossa.com/api/projects/git%2Bgithub.com%2Fwalkframe%2Fd2a.svg?type=shield)](https://app.fossa.com/projects/git%2Bgithub.com%2Fwalkframe%2Fd2a?ref=badge_shield)
 
 .. image:: https://badge.fury.io/py/d2a.svg
   :target: https://badge.fury.io/py/d2a
@@ -11,6 +10,9 @@
 
 .. image:: https://img.shields.io/badge/License-MIT-blue.svg
   :target: https://opensource.org/licenses/MIT
+
+.. image:: https://app.fossa.com/api/projects/git%2Bgithub.com%2Fwalkframe%2Fd2a.svg?type=large
+   alt: https://app.fossa.com/projects/git%2Bgithub.com%2Fwalkframe%2Fd2a?ref=badge_large
 
 Requirements
 ============
@@ -68,6 +70,3 @@ Link
 - See more details on `walkframe docs <https://docs.walkframe.com/products/d2a/>`__
 
   - `History <https://docs.walkframe.com/products/d2a/history/>`__
-
-
-[![FOSSA Status](https://app.fossa.com/api/projects/git%2Bgithub.com%2Fwalkframe%2Fd2a.svg?type=large)](https://app.fossa.com/projects/git%2Bgithub.com%2Fwalkframe%2Fd2a?ref=badge_large)
